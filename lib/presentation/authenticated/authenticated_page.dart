@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:tennis_app/core/widgets/btn_tennis.dart';
+import 'package:tennis_app/presentation/authenticated/login_or_register_page.dart';
 
 class AuthenticatedPage extends StatelessWidget {
   const AuthenticatedPage({super.key});
@@ -36,13 +38,19 @@ class AuthenticatedPage extends StatelessWidget {
                     children: [
                       BtnTennis(
                         text: 'Iniciar sesión',
-                        onTap: () {},
+                        onTap: () => context.pushNamed(
+                          LoginOrRegisterPage.routeName,
+                          extra: LoginOrRegisterEnum.login,
+                        ),
                       ),
                       const SizedBox(height: 5),
                       BtnTennis(
                         text: 'Registrarme',
                         btnColor: const Color(0xAA9B9C9D),
-                        onTap: () {},
+                        onTap: () => context.pushNamed(
+                          LoginOrRegisterPage.routeName,
+                          extra: LoginOrRegisterEnum.register,
+                        ),
                       ),
                     ],
                   ),
