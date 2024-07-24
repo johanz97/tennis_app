@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:tennis_app/core/utils.dart';
 
 class PasswordInput extends StatefulWidget {
@@ -27,6 +28,12 @@ class _PasswordInputState extends State<PasswordInput> {
       cursorColor: Colors.black,
       textInputAction: TextInputAction.next,
       keyboardType: TextInputType.visiblePassword,
+      inputFormatters: [
+        FilteringTextInputFormatter.allow(
+          RegExp('[a-z A-Z á-ú Á-Ú 0-9 ]'),
+        ),
+        FilteringTextInputFormatter.deny(' '),
+      ],
       validator: (value) {
         if (value?.isEmpty ?? true) return 'Campo requerido';
 

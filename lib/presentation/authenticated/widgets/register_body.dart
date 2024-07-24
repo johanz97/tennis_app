@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:tennis_app/core/utils.dart';
 import 'package:tennis_app/core/widgets/btn_tennis.dart';
 import 'package:tennis_app/core/widgets/email_input.dart';
@@ -43,6 +44,12 @@ class _RegisterBodyState extends State<RegisterBody> {
             cursorColor: Colors.black,
             textInputAction: TextInputAction.next,
             keyboardType: TextInputType.text,
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(
+                RegExp('[a-z A-Z á-ú Á-Ú 0-9 ]'),
+              ),
+              FilteringTextInputFormatter.deny('  '),
+            ],
             validator: (value) {
               if (value?.isEmpty ?? true) return 'Campo requerido';
 
@@ -58,11 +65,14 @@ class _RegisterBodyState extends State<RegisterBody> {
           EmailInput(emailController: _emailController),
           const SizedBox(height: 5),
           TextFormField(
-            maxLength: 50,
+            maxLength: 10,
             controller: _phoneController,
             cursorColor: Colors.black,
             textInputAction: TextInputAction.next,
-            keyboardType: TextInputType.text,
+            keyboardType: TextInputType.number,
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp('[0-9]')),
+            ],
             validator: (value) {
               if (value?.isEmpty ?? true) return 'Campo requerido';
 
