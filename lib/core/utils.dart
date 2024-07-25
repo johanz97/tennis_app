@@ -24,3 +24,37 @@ InputDecoration decoration({
     ),
   );
 }
+
+InputDecoration decorationDate({
+  required BuildContext context,
+  required String label,
+}) {
+  return InputDecoration(
+    labelText: label,
+    filled: true,
+    fillColor: Colors.white,
+    counter: const Offstage(),
+    suffixIcon: const Icon(Icons.arrow_drop_down, size: 20),
+    focusedBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(20),
+      borderSide: const BorderSide(color: Colors.white),
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(20),
+      borderSide: const BorderSide(color: Colors.white),
+    ),
+    errorBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(20),
+      borderSide: const BorderSide(color: Colors.white),
+    ),
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(20),
+      borderSide: const BorderSide(color: Colors.white),
+    ),
+    labelStyle: const TextStyle(
+      color: Colors.black,
+      fontWeight: FontWeight.w400,
+      fontSize: 15,
+    ),
+  );
+}

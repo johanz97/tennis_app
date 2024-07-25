@@ -21,44 +21,63 @@ class BookingCard extends StatelessWidget {
             fit: BoxFit.fill,
           ),
         ),
-        const SizedBox(width: 5),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        const SizedBox(width: 10),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Epic Box',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 5),
+              const Text(
+                'Cancha tipo A',
+                style: TextStyle(fontSize: 12),
+              ),
+              const SizedBox(height: 5),
+              const Row(
+                children: [
+                  Icon(
+                    Icons.calendar_today_outlined,
+                    size: 16,
+                  ),
+                  SizedBox(width: 5),
+                  Text(
+                    '9 de Julio 2024',
+                    style: TextStyle(fontSize: 12),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 5),
+              Text(
+                'Reservado por ${user?.displayName ?? ''}',
+                style: const TextStyle(fontSize: 12),
+              ),
+              const SizedBox(height: 5),
+              const Row(
+                children: [
+                  Icon(
+                    Icons.watch_later_outlined,
+                    size: 12,
+                  ),
+                  SizedBox(width: 2),
+                  Text(
+                    r'2 horas I $50',
+                    style: TextStyle(fontSize: 12),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        const Row(
           children: [
-            const Text('Epic Box'),
-            const SizedBox(height: 5),
-            const Row(
-              children: [
-                Icon(
-                  Icons.calendar_today_outlined,
-                  size: 16,
-                ),
-                SizedBox(width: 5),
-                Text(
-                  '9 de Julio 2024',
-                  style: TextStyle(fontSize: 12),
-                ),
-              ],
-            ),
-            const SizedBox(height: 5),
-            Text(
-              'Reservado por ${user?.displayName ?? ''}',
-              style: const TextStyle(fontSize: 12),
-            ),
-            const SizedBox(height: 5),
-            const Row(
-              children: [
-                Icon(
-                  Icons.watch_later_outlined,
-                  size: 12,
-                ),
-                SizedBox(width: 2),
-                Text(
-                  r'2 horas I $50',
-                  style: TextStyle(fontSize: 12),
-                ),
-              ],
-            ),
+            Icon(Icons.cloud_queue_rounded, size: 16),
+            SizedBox(width: 5),
+            Text('30%'),
           ],
         ),
       ],

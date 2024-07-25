@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tennis_app/logic/authentication_provider.dart';
 import 'package:tennis_app/presentation/home/widgets/booking_body.dart';
+import 'package:tennis_app/presentation/home/widgets/favorite_body.dart';
 import 'package:tennis_app/presentation/home/widgets/home_body.dart';
 import 'package:tennis_app/services/firebase_service.dart';
 
@@ -111,7 +112,7 @@ class _HomePageWidgetState extends State<_HomePageWidget> {
           ? const HomeBody()
           : _selectedIndex == NavBarEnum.bookings
               ? const BookingBody()
-              : const Offstage(),
+              : const FavoriteBody(),
       bottomNavigationBar: SafeArea(
         child: Container(
           decoration: const BoxDecoration(

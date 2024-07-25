@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tennis_app/core/widgets/btn_tennis.dart';
+import 'package:tennis_app/presentation/reserve_page.dart';
 
 class CourtCard extends StatelessWidget {
   const CourtCard({super.key});
@@ -88,7 +90,7 @@ class CourtCard extends StatelessWidget {
               ),
               child: BtnTennis(
                 text: 'Reservar',
-                onTap: () {},
+                onTap: () => context.pushNamed(ReservePage.routeName),
               ),
             ),
           ],
