@@ -103,22 +103,25 @@ class _RegisterBodyState extends State<RegisterBody> {
             },
           ),
           const SizedBox(height: 30),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                'Ya tengo cuenta',
-                style: TextStyle(fontSize: 15),
-              ),
-              const SizedBox(width: 5),
-              GestureDetector(
-                onTap: widget.onChangeSection,
-                child: const Text(
-                  'Iniciar sesión',
-                  style: TextStyle(fontSize: 15, color: Colors.blueAccent),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  'Ya tengo cuenta',
+                  style: TextStyle(fontSize: 15),
                 ),
-              ),
-            ],
+                const SizedBox(width: 5),
+                GestureDetector(
+                  onTap: widget.onChangeSection,
+                  child: const Text(
+                    'Iniciar sesión',
+                    style: TextStyle(fontSize: 15, color: Colors.blueAccent),
+                  ),
+                ),
+              ],
+            ),
           ),
           const SizedBox(height: 10),
         ],
