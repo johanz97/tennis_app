@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:tennis_app/core/utils.dart';
 import 'package:tennis_app/core/widgets/btn_tennis.dart';
 import 'package:tennis_app/core/widgets/email_input.dart';
 import 'package:tennis_app/core/widgets/password_input.dart';
+import 'package:tennis_app/logic/authentication_provider.dart';
+import 'package:tennis_app/presentation/home/home_page.dart';
 
 class RegisterBody extends StatefulWidget {
   const RegisterBody({required this.onChangeSection, super.key});
@@ -97,9 +101,20 @@ class _RegisterBodyState extends State<RegisterBody> {
           const SizedBox(height: 30),
           BtnTennis(
             text: 'Regístrarme',
-            onTap: () {
+            onTap: () async {
               FocusManager.instance.primaryFocus?.unfocus();
               if (!_formKey.currentState!.validate()) return;
+
+              final response =
+                  await context.read<AuthenticationProvider>().createUser(
+                        email: _emailController.text.trim(),
+                        password: _passwordController.text.trim(),
+                      );
+
+              if (!context.mounted) return;
+              response.fold((errorMessage) {}, (unit) {
+                context.goNamed(HomePage.routeName);
+              });
             },
           ),
           const SizedBox(height: 30),

@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:tennis_app/core/widgets/btn_tennis.dart';
 import 'package:tennis_app/core/widgets/email_input.dart';
 import 'package:tennis_app/core/widgets/password_input.dart';
+import 'package:tennis_app/logic/authentication_provider.dart';
+import 'package:tennis_app/presentation/home/home_page.dart';
 
 class LoginBody extends StatefulWidget {
   const LoginBody({required this.onChangeSection, super.key});
@@ -61,9 +65,20 @@ class _LoginBodyState extends State<LoginBody> {
           const SizedBox(height: 20),
           BtnTennis(
             text: 'Iniciar sesión',
-            onTap: () {
+            onTap: () async {
               FocusManager.instance.primaryFocus?.unfocus();
               if (!_formKey.currentState!.validate()) return;
+
+              final response =
+                  await context.read<AuthenticationProvider>().signInUser(
+                        email: _emailController.text.trim(),
+                        password: _passwordController.text.trim(),
+                      );
+
+              if (!context.mounted) return;
+              response.fold((errorMessage) {}, (unit) {
+                context.goNamed(HomePage.routeName);
+              });
             },
           ),
           const SizedBox(height: 30),
