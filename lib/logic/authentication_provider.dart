@@ -1,8 +1,9 @@
 import 'package:dartz/dartz.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tennis_app/services/firebase_service.dart';
 
-class AuthenticationProvider extends ChangeNotifier {
+class AuthenticationProvider with ChangeNotifier {
   AuthenticationProvider({required this.service});
 
   final FirebaseService service;
@@ -11,14 +12,21 @@ class AuthenticationProvider extends ChangeNotifier {
 
   bool get isLoading => _isLoading;
 
+  User? getUser() => service.getUser();
+
   Future<Either<String, Unit>> createUser({
+    required String name,
     required String email,
     required String password,
   }) async {
     _isLoading = true;
     notifyListeners();
 
-    final response = await service.createUser(email: email, password: password);
+    final response = await service.createUser(
+      name: name,
+      email: email,
+      password: password,
+    );
 
     _isLoading = false;
     notifyListeners();

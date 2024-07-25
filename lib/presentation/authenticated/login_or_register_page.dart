@@ -19,8 +19,8 @@ class LoginOrRegisterPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider.value(
-      value: AuthenticationProvider(service: FirebaseService()),
+    return ChangeNotifierProvider(
+      create: (context) => AuthenticationProvider(service: FirebaseService()),
       builder: (context, child) => _LoginOrRegisterPageWidget(section),
     );
   }

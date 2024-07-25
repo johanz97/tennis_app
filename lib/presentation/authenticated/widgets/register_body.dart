@@ -107,6 +107,7 @@ class _RegisterBodyState extends State<RegisterBody> {
 
               final response =
                   await context.read<AuthenticationProvider>().createUser(
+                        name: _nameController.text.trim(),
                         email: _emailController.text.trim(),
                         password: _passwordController.text.trim(),
                       );

@@ -3,15 +3,20 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class FirebaseService {
+  User? getUser() => FirebaseAuth.instance.currentUser;
+
   Future<Either<String, Unit>> createUser({
+    required String name,
     required String email,
     required String password,
   }) async {
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      final response =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
+      await response.user?.updateDisplayName(name);
 
       return right(unit);
     } on FirebaseAuthException catch (err) {

@@ -1,32 +1,45 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 import 'package:tennis_app/core/widgets/btn_tennis.dart';
+import 'package:tennis_app/logic/authentication_provider.dart';
 import 'package:tennis_app/presentation/authenticated/login_or_register_page.dart';
 import 'package:tennis_app/presentation/home/home_page.dart';
+import 'package:tennis_app/services/firebase_service.dart';
 
-class AuthenticatedPage extends StatefulWidget {
+class AuthenticatedPage extends StatelessWidget {
   const AuthenticatedPage({super.key});
 
   @override
-  State<AuthenticatedPage> createState() {
-    return _AuthenticatedPageState();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (context) => AuthenticationProvider(service: FirebaseService()),
+      builder: (context, child) => const _AuthenticatedPageWidget(),
+    );
   }
 }
 
-class _AuthenticatedPageState extends State<AuthenticatedPage> {
+class _AuthenticatedPageWidget extends StatefulWidget {
+  const _AuthenticatedPageWidget();
+
+  @override
+  State<_AuthenticatedPageWidget> createState() {
+    return _AuthenticatedPageStateWidget();
+  }
+}
+
+class _AuthenticatedPageStateWidget extends State<_AuthenticatedPageWidget> {
   bool _isLoading = true;
 
   Future<void> _navigateToHome() async {
     await Future.delayed(const Duration(milliseconds: 2500), () {});
-    FirebaseAuth.instance.authStateChanges().listen((User? user) {
-      setState(() => _isLoading = false);
-
-      if (user != null) {
-        context.goNamed(HomePage.routeName);
-      }
-    });
+    if (!mounted) return;
+    final user = context.read<AuthenticationProvider>().getUser();
+    setState(() => _isLoading = false);
+    if (user != null) {
+      context.goNamed(HomePage.routeName);
+    }
   }
 
   @override

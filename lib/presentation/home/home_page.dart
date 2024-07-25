@@ -14,8 +14,8 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider.value(
-      value: AuthenticationProvider(service: FirebaseService()),
+    return ChangeNotifierProvider(
+      create: (context) => AuthenticationProvider(service: FirebaseService()),
       builder: (context, child) => const _HomePageWidget(),
     );
   }
@@ -86,16 +86,22 @@ class _HomePageWidgetState extends State<_HomePageWidget> {
           const SizedBox(width: 5),
           const Icon(Icons.notifications_none, color: Colors.white),
           const SizedBox(width: 5),
-          GestureDetector(
-            onTap: () async {
-              final response =
-                  await context.read<AuthenticationProvider>().logOutUser();
-              if (!context.mounted) return;
-              response.fold((errorMessage) {}, (unit) {
-                context.go('/');
-              });
-            },
-            child: const Icon(Icons.menu, color: Colors.white),
+          PopupMenuButton(
+            icon: const Icon(Icons.menu, color: Colors.white),
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                value: 0,
+                child: const Text('Cerrar sesión'),
+                onTap: () async {
+                  final response =
+                      await context.read<AuthenticationProvider>().logOutUser();
+                  if (!context.mounted) return;
+                  response.fold((errorMessage) {}, (unit) {
+                    context.go('/');
+                  });
+                },
+              ),
+            ],
           ),
           const SizedBox(width: 20),
         ],
