@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tennis_app/logic/authentication_provider.dart';
+import 'package:tennis_app/presentation/home/widgets/booking_body.dart';
 import 'package:tennis_app/presentation/home/widgets/home_body.dart';
 import 'package:tennis_app/services/firebase_service.dart';
 
@@ -106,7 +107,11 @@ class _HomePageWidgetState extends State<_HomePageWidget> {
           const SizedBox(width: 20),
         ],
       ),
-      body: const HomeBody(),
+      body: _selectedIndex == NavBarEnum.home
+          ? const HomeBody()
+          : _selectedIndex == NavBarEnum.bookings
+              ? const BookingBody()
+              : const Offstage(),
       bottomNavigationBar: SafeArea(
         child: Container(
           decoration: const BoxDecoration(

@@ -6,11 +6,13 @@ class BtnTennis extends StatelessWidget {
     required this.onTap,
     super.key,
     this.btnColor,
+    this.icon,
   });
 
   final String text;
   final VoidCallback onTap;
   final Color? btnColor;
+  final IconData? icon;
 
   @override
   Widget build(BuildContext context) {
@@ -26,13 +28,23 @@ class BtnTennis extends StatelessWidget {
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           ),
         ),
-        child: Text(
-          text,
-          style: const TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (icon != null)
+              Padding(
+                padding: const EdgeInsets.only(right: 10),
+                child: Icon(icon, color: Colors.white),
+              ),
+            Text(
+              text,
+              style: const TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+          ],
         ),
       ),
     );
