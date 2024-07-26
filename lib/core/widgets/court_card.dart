@@ -90,9 +90,11 @@ class _CourtCardWidgetState extends State<_CourtCardWidget> {
                         Row(
                           children: [
                             Icon(
-                              (weather?.tempC ?? 0) > 30
+                              (weather?.tempC ?? 0) < 15
                                   ? Icons.cloudy_snowing
-                                  : Icons.cloud_queue_rounded,
+                                  : (weather?.tempC ?? 0) > 30
+                                      ? Icons.sunny
+                                      : Icons.cloud_queue_rounded,
                               size: 16,
                             ),
                             const SizedBox(width: 5),

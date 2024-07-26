@@ -1,24 +1,10 @@
 {
     "data": [
-      {
-        "id": "0",
-        "name": "Jose Paredes"
-      },
-      {
-        "id": "1",
-        "name": "Jorge Tapia"
-      },
-      {
-        "id": "2",
-        "name": "Laura Ortega"
-      },
-      {
-        "id": "3",
-        "name": "Pedro Gonzalez"
-      },
-      {
-        "id": "4",
-        "name": "Rosa Gaspar"
-      }
+      { "id": "0", "name": "N/A" },
+      { "id": "1", "name": "Jose Paredes" },
+      { "id": "2",  "name": "Laura Ortega" },
+      { "id": "3", "name": "Pedro Gonzalez" },
+      { "id": "4", "name": "Rosa Gaspar" },
+      { "id": "5", "name": "Jorge Tapia" }
     ]
 }
