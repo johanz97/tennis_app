@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
-class BtnTennis extends StatelessWidget {
-  const BtnTennis({
+class BtnOutlineTennis extends StatelessWidget {
+  const BtnOutlineTennis({
     required this.text,
     required this.onTap,
     super.key,
-    this.btnColor,
+    this.color,
     this.icon,
   });
 
   final String text;
   final VoidCallback onTap;
-  final Color? btnColor;
+  final Color? color;
   final IconData? icon;
 
   @override
@@ -21,11 +21,11 @@ class BtnTennis extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onTap,
         style: ButtonStyle(
-          backgroundColor: WidgetStatePropertyAll(
-            btnColor ?? const Color(0xAAAAF724),
-          ),
           shape: WidgetStateProperty.all(
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            RoundedRectangleBorder(
+              side: BorderSide(color: color ?? Colors.black),
+              borderRadius: BorderRadius.circular(10),
+            ),
           ),
         ),
         child: Row(
@@ -34,17 +34,17 @@ class BtnTennis extends StatelessWidget {
             if (icon != null)
               Padding(
                 padding: const EdgeInsets.only(right: 10),
-                child: Icon(icon, color: Colors.white),
+                child: Icon(icon, color: color ?? Colors.black),
               ),
             Flexible(
               child: FittedBox(
                 fit: BoxFit.scaleDown,
                 child: Text(
                   text,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: color ?? Colors.black,
                   ),
                 ),
               ),
