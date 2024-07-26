@@ -7,7 +7,7 @@ class BookingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = context.watch<AuthenticationProvider>().getUser();
+    final user = context.watch<AuthenticationProvider>().user;
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,

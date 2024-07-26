@@ -3,13 +3,31 @@ import 'package:provider/provider.dart';
 import 'package:tennis_app/core/widgets/booking_card.dart';
 import 'package:tennis_app/core/widgets/court_card.dart';
 import 'package:tennis_app/logic/authentication_provider.dart';
+import 'package:tennis_app/logic/court_provider.dart';
 
-class HomeBody extends StatelessWidget {
+class HomeBody extends StatefulWidget {
   const HomeBody({super.key});
 
   @override
+  State<HomeBody> createState() => _HomeBodyState();
+}
+
+class _HomeBodyState extends State<HomeBody> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final response = await context.read<CourtProvider>().getCourts();
+
+      response.fold((errorMessage) {}, (_) {});
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final user = context.watch<AuthenticationProvider>().getUser();
+    final user = context.watch<AuthenticationProvider>().user;
+    final isLoading = context.watch<CourtProvider>().isLoading;
+    final courts = context.watch<CourtProvider>().courts;
 
     return ListView(
       children: [
@@ -37,14 +55,18 @@ class HomeBody extends StatelessWidget {
               const SizedBox(height: 10),
               SizedBox(
                 height: 350,
-                child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: 10,
-                  separatorBuilder: (context, index) {
-                    return const SizedBox(width: 10);
-                  },
-                  itemBuilder: (context, index) => const CourtCard(),
-                ),
+                child: isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : ListView.separated(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: courts.length,
+                        separatorBuilder: (context, index) {
+                          return const SizedBox(width: 10);
+                        },
+                        itemBuilder: (context, index) {
+                          return CourtCard(court: courts[index]);
+                        },
+                      ),
               ),
             ],
           ),

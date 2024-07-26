@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tennis_app/logic/authentication_provider.dart';
+import 'package:tennis_app/logic/court_provider.dart';
 import 'package:tennis_app/presentation/home/widgets/booking_body.dart';
 import 'package:tennis_app/presentation/home/widgets/favorite_body.dart';
 import 'package:tennis_app/presentation/home/widgets/home_body.dart';
 import 'package:tennis_app/services/firebase_service.dart';
+import 'package:tennis_app/services/local_service.dart';
 
 enum NavBarEnum { home, bookings, favorite }
 
@@ -16,9 +18,20 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => AuthenticationProvider(service: FirebaseService()),
-      builder: (context, child) => const _HomePageWidget(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) {
+            return AuthenticationProvider(service: FirebaseService());
+          },
+        ),
+        ChangeNotifierProvider(
+          create: (context) {
+            return CourtProvider(service: LocalService());
+          },
+        ),
+      ],
+      child: const _HomePageWidget(),
     );
   }
 }

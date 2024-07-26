@@ -1,0 +1,94 @@
+{
+    "data": [
+      {
+        "id": "0",
+        "image": "https://miro.medium.com/v2/resize:fit:828/1*6QU98KnA_iROC8C6lFMjTQ.jpeg",
+        "name": "Cancha Nueva",
+        "type": "A",
+        "address": "Caracas",
+        "available": "7:00 am a 4:00 pm",
+        "cost": "30"
+      },
+      {
+        "id": "1",
+        "image": "https://irp-cdn.multiscreensite.com/de3a0ffe/dms3rep/multi/Tipos+de+Superficie+para+los+Campos+de+Tenis.jpg",
+        "name": "Cancha Vieja",
+        "type": "B",
+        "address": "Caracas",
+        "available": "8:00 am a 5:00 pm",
+        "cost": "20"
+      },
+      {
+        "id": "2",
+        "image": "https://static01.nyt.com/images/2018/08/20/arts/20tennis-item1/merlin_142464300_b4dda7b5-a0cf-4be9-9cbe-aa3b9a3986e3-superJumbo.jpg",
+        "name": "Cancha Sucia",
+        "type": "C",
+        "address": "Caracas",
+        "available": "9:00 am a 6:00 pm",
+        "cost": "25"
+      },
+      {
+        "id": "3",
+        "image": "https://civideportes.com.co/wp-content/uploads/2022/05/image29953.jpg",
+        "name": "Cancha Nueva",
+        "type": "A",
+        "address": "Bogotá",
+        "available": "7:00 am a 4:00 pm",
+        "cost": "300"
+      },
+      {
+        "id": "4",
+        "image": "https://areaurbana.com/wp-content/uploads/2018/03/%C2%BFC%C3%B3mo-se-hace-una-cancha-de-tenis-1.jpg",
+        "name": "Cancha Vieja",
+        "type": "B",
+        "address": "Bogotá",
+        "available": "8:00 am a 5:00 pm",
+        "cost": "200"
+      },
+      {
+        "id": "5",
+        "image": "https://www.quitoinforma.gob.ec/wp-content/uploads/2024/01/IMG_20240111_091032-800x445.jpg",
+        "name": "Cancha Sucia",
+        "type": "C",
+        "address": "Bogotá",
+        "available": "9:00 am a 6:00 pm",
+        "cost": "250"
+      },
+      {
+        "id": "6",
+        "image": "https://www.shutterstock.com/image-photo/tennis-court-view-artificial-turf-600nw-2291685123.jpg",
+        "name": "Cancha Nueva",
+        "type": "A",
+        "address": "Quito",
+        "available": "7:00 am a 4:00 pm",
+        "cost": "20"
+      },
+      {
+        "id": "7",
+        "image": "https://www.quitoinforma.gob.ec/wp-content/uploads/2024/01/IMG_20240111_091012-800x445.jpg",
+        "name": "Cancha Vieja",
+        "type": "B",
+        "address": "Quito",
+        "available": "8:00 am a 5:00 pm",
+        "cost": "20"
+      },
+      {
+        "id": "8",
+        "image": "https://procanchas.com.ar/wp-content/uploads/2022/08/construccion-pista-tenis-buenos-aires-argentina-1.jpeg",
+        "name": "Cancha Sucia",
+        "type": "C",
+        "address": "Quito",
+        "available": "9:00 am a 6:00 pm",
+        "cost": "20"
+      },
+      {
+        "id": "9",
+        "image": "https://integralspor.com/uploads/blog/detail/1627a3ea0484f844146.jpg",
+        "name": "Cancha Rara",
+        "type": "A",
+        "address": "Buenos Aires",
+        "available": "7:00 am a 4:00 pm",
+        "cost": "500"
+      }
+    ]
+}

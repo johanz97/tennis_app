@@ -35,7 +35,7 @@ class _AuthenticatedPageStateWidget extends State<_AuthenticatedPageWidget> {
   Future<void> _navigateToHome() async {
     await Future.delayed(const Duration(milliseconds: 2500), () {});
     if (!mounted) return;
-    final user = context.read<AuthenticationProvider>().getUser();
+    final user = context.read<AuthenticationProvider>().user;
     setState(() => _isLoading = false);
     if (user != null) {
       context.goNamed(HomePage.routeName);

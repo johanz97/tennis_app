@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tennis_app/core/widgets/btn_tennis.dart';
-import 'package:tennis_app/presentation/reserve_page.dart';
+import 'package:tennis_app/models/court_model.dart';
+import 'package:tennis_app/presentation/reserve/reserve_page.dart';
 
 class CourtCard extends StatelessWidget {
-  const CourtCard({super.key});
+  const CourtCard({required this.court, super.key});
+
+  final CourtModel court;
 
   @override
   Widget build(BuildContext context) {
@@ -15,39 +18,46 @@ class CourtCard extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(10),
-              child: Image.asset(
-                'assets/images/logo_login.png',
-                width: double.infinity,
-                height: 150,
-                fit: BoxFit.fill,
-              ),
+              child: court.image.isNotEmpty
+                  ? Image.network(
+                      court.image,
+                      width: double.infinity,
+                      height: 150,
+                      fit: BoxFit.fill,
+                    )
+                  : Image.asset(
+                      'assets/images/logo_login.png',
+                      width: double.infinity,
+                      height: 150,
+                      fit: BoxFit.fill,
+                    ),
             ),
-            const Padding(
-              padding: EdgeInsets.all(10),
+            Padding(
+              padding: const EdgeInsets.all(10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     children: [
                       Text(
-                        'Epic Box',
-                        style: TextStyle(
+                        court.name,
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      Spacer(),
-                      Icon(Icons.cloud_queue_rounded, size: 16),
-                      SizedBox(width: 5),
-                      Text('30%'),
+                      const Spacer(),
+                      const Icon(Icons.cloud_queue_rounded, size: 16),
+                      const SizedBox(width: 5),
+                      const Text('30%'),
                     ],
                   ),
-                  SizedBox(height: 5),
+                  const SizedBox(height: 5),
                   Text(
-                    'Cancha tipo A',
-                    style: TextStyle(fontSize: 12),
+                    'Cancha tipo ${court.type}',
+                    style: const TextStyle(fontSize: 12),
                   ),
-                  SizedBox(height: 10),
-                  Row(
+                  const SizedBox(height: 10),
+                  const Row(
                     children: [
                       Icon(
                         Icons.calendar_today_outlined,
@@ -60,22 +70,22 @@ class CourtCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Row(
                     children: [
-                      Text(
+                      const Text(
                         'Disponible',
                         style: TextStyle(fontSize: 12),
                       ),
-                      SizedBox(width: 5),
-                      Icon(
+                      const SizedBox(width: 5),
+                      const Icon(
                         Icons.watch_later_outlined,
                         size: 12,
                       ),
-                      SizedBox(width: 2),
+                      const SizedBox(width: 2),
                       Text(
-                        '9:00 pm a 10:00 pm',
-                        style: TextStyle(fontSize: 12),
+                        court.available,
+                        style: const TextStyle(fontSize: 12),
                       ),
                     ],
                   ),
@@ -90,7 +100,10 @@ class CourtCard extends StatelessWidget {
               ),
               child: BtnTennis(
                 text: 'Reservar',
-                onTap: () => context.pushNamed(ReservePage.routeName),
+                onTap: () => context.pushNamed(
+                  ReservePage.routeName,
+                  extra: court,
+                ),
               ),
             ),
           ],

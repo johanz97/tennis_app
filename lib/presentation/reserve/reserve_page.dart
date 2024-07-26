@@ -3,20 +3,41 @@ import 'package:datetime_picker_formfield_new/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:tennis_app/core/utils.dart';
 import 'package:tennis_app/core/widgets/btn_icon_tennis.dart';
 import 'package:tennis_app/core/widgets/btn_tennis.dart';
+import 'package:tennis_app/logic/trainer_provider.dart';
+import 'package:tennis_app/models/court_model.dart';
+import 'package:tennis_app/models/trainer_model.dart';
+import 'package:tennis_app/services/local_service.dart';
 
-class ReservePage extends StatefulWidget {
-  const ReservePage({super.key});
+class ReservePage extends StatelessWidget {
+  const ReservePage({required this.court, super.key});
 
   static String routeName = 'reserve';
 
+  final CourtModel court;
+
   @override
-  State<ReservePage> createState() => _ReservePageState();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (context) => TrainerProvider(service: LocalService()),
+      builder: (context, child) => _ReservePageWidget(court: court),
+    );
+  }
 }
 
-class _ReservePageState extends State<ReservePage> {
+class _ReservePageWidget extends StatefulWidget {
+  const _ReservePageWidget({required this.court});
+
+  final CourtModel court;
+
+  @override
+  State<_ReservePageWidget> createState() => _ReservePageWidgetState();
+}
+
+class _ReservePageWidgetState extends State<_ReservePageWidget> {
   final _formKey = GlobalKey<FormState>();
   final _dateController = TextEditingController();
   final _initHourController = TextEditingController();
@@ -24,6 +45,16 @@ class _ReservePageState extends State<ReservePage> {
   final _textController = TextEditingController();
   DateTime? _selectedDate;
   DateTime? _selectedFirstTime;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final response = await context.read<TrainerProvider>().getTrainers();
+
+      response.fold((errorMessage) {}, (_) {});
+    });
+  }
 
   @override
   void dispose() {
@@ -36,6 +67,9 @@ class _ReservePageState extends State<ReservePage> {
 
   @override
   Widget build(BuildContext context) {
+    final trainers = context.watch<TrainerProvider>().trainers;
+    final selectedTrainer = context.watch<TrainerProvider>().selectedTrainer;
+
     return Scaffold(
       body: ListView(
         padding: EdgeInsets.zero,
@@ -44,11 +78,20 @@ class _ReservePageState extends State<ReservePage> {
             children: [
               CarouselSlider(
                 items: [
-                  Image.asset(
-                    'assets/images/authenticated_background.png',
-                    width: double.infinity,
-                    fit: BoxFit.fill,
-                  ),
+                  if (widget.court.image.isNotEmpty)
+                    Image.network(
+                      widget.court.image,
+                      width: double.infinity,
+                      height: 150,
+                      fit: BoxFit.fill,
+                    )
+                  else
+                    Image.asset(
+                      'assets/images/logo_login.png',
+                      width: double.infinity,
+                      height: 150,
+                      fit: BoxFit.fill,
+                    ),
                 ],
                 options: CarouselOptions(
                   height: 300,
@@ -82,56 +125,56 @@ class _ReservePageState extends State<ReservePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Row(
+                Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(width: 10),
+                    const SizedBox(width: 10),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Epic Box',
-                            style: TextStyle(
+                            widget.court.name,
+                            style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 18,
                             ),
                           ),
-                          SizedBox(height: 5),
+                          const SizedBox(height: 5),
                           Text(
-                            'Cancha tipo A',
-                            style: TextStyle(fontSize: 12),
+                            'Cancha tipo ${widget.court.type}',
+                            style: const TextStyle(fontSize: 12),
                           ),
-                          SizedBox(height: 5),
+                          const SizedBox(height: 5),
                           Row(
                             children: [
-                              Text(
+                              const Text(
                                 'Disponible',
                                 style: TextStyle(fontSize: 12),
                               ),
-                              SizedBox(width: 5),
-                              Icon(
+                              const SizedBox(width: 5),
+                              const Icon(
                                 Icons.watch_later_outlined,
                                 size: 12,
                               ),
-                              SizedBox(width: 2),
+                              const SizedBox(width: 2),
                               Text(
-                                '9:00 pm a 10:00 pm',
-                                style: TextStyle(fontSize: 12),
+                                widget.court.available,
+                                style: const TextStyle(fontSize: 12),
                               ),
                             ],
                           ),
-                          SizedBox(height: 5),
+                          const SizedBox(height: 5),
                           Row(
                             children: [
-                              Icon(
+                              const Icon(
                                 Icons.location_on_outlined,
                                 size: 12,
                               ),
-                              SizedBox(width: 2),
+                              const SizedBox(width: 2),
                               Text(
-                                'New York',
-                                style: TextStyle(fontSize: 12),
+                                widget.court.address,
+                                style: const TextStyle(fontSize: 12),
                               ),
                             ],
                           ),
@@ -142,20 +185,20 @@ class _ReservePageState extends State<ReservePage> {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
-                          r'$25',
-                          style: TextStyle(
+                          '\$${widget.court.cost}',
+                          style: const TextStyle(
                             color: Colors.blueAccent,
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
                           ),
                         ),
-                        SizedBox(height: 5),
-                        Text(
+                        const SizedBox(height: 5),
+                        const Text(
                           'Por hora',
                           style: TextStyle(fontSize: 12, color: Colors.black38),
                         ),
-                        SizedBox(height: 5),
-                        Row(
+                        const SizedBox(height: 5),
+                        const Row(
                           children: [
                             Icon(Icons.cloud_queue_rounded, size: 16),
                             SizedBox(width: 5),
@@ -174,26 +217,24 @@ class _ReservePageState extends State<ReservePage> {
                     border: Border.all(),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: DropdownButton<String>(
+                  child: DropdownButton<TrainerModel>(
                     padding: const EdgeInsets.all(5),
                     isExpanded: true,
-                    value: 'd',
+                    value: selectedTrainer,
                     underline: const Offstage(),
-                    items: const [
-                      DropdownMenuItem(
-                        value: 'd',
-                        child: Text('data'),
-                      ),
-                      DropdownMenuItem(
-                        value: 'a',
-                        child: Text('data'),
-                      ),
-                      DropdownMenuItem(
-                        value: 'dat',
-                        child: Text('data'),
-                      ),
-                    ],
-                    onChanged: (value) {},
+                    items: List<DropdownMenuItem<TrainerModel>>.from(
+                      trainers.map(
+                        (trainer) {
+                          return DropdownMenuItem(
+                            value: trainer,
+                            child: Text(trainer.name),
+                          );
+                        },
+                      ).toList(),
+                    ),
+                    onChanged: (value) {
+                      context.read<TrainerProvider>().selectedTrainer = value;
+                    },
                   ),
                 ),
               ],

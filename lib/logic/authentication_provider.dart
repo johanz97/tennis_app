@@ -12,7 +12,7 @@ class AuthenticationProvider with ChangeNotifier {
 
   bool get isLoading => _isLoading;
 
-  User? getUser() => service.getUser();
+  User? get user => service.user;
 
   Future<Either<String, Unit>> createUser({
     required String name,
