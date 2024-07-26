@@ -9,17 +9,10 @@ class TrainerProvider with ChangeNotifier {
   final LocalService service;
 
   final List<TrainerModel> _trainers = [];
-  TrainerModel? _selectedTrainer;
   bool _isLoading = false;
 
   List<TrainerModel> get trainers => _trainers;
-  TrainerModel? get selectedTrainer => _selectedTrainer;
   bool get isLoading => _isLoading;
-
-  set selectedTrainer(TrainerModel? value) {
-    _selectedTrainer = value;
-    notifyListeners();
-  }
 
   Future<Either<String, Unit>> getTrainers() async {
     _trainers.clear();
@@ -35,7 +28,6 @@ class TrainerProvider with ChangeNotifier {
       return left(errorMessage);
     }, (response) {
       _trainers.addAll(response);
-      if (trainers.isNotEmpty) _selectedTrainer = _trainers.first;
       _isLoading = false;
       notifyListeners();
 

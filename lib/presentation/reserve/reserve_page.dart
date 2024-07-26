@@ -4,12 +4,10 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tennis_app/core/widgets/btn_icon_tennis.dart';
 import 'package:tennis_app/core/widgets/weather_info.dart';
-import 'package:tennis_app/logic/trainer_provider.dart';
+import 'package:tennis_app/logic/summary_provider.dart';
 import 'package:tennis_app/models/court_model.dart';
 import 'package:tennis_app/presentation/reserve/widgets/reserve_body.dart';
 import 'package:tennis_app/presentation/reserve/widgets/summary_body.dart';
-
-import 'package:tennis_app/services/local_service.dart';
 
 enum ReserveEnum { reserve, summary }
 
@@ -24,7 +22,7 @@ class ReservePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) {
-        return TrainerProvider(service: LocalService());
+        return SummaryProvider(court);
       },
       child: _ReservePageWidget(court: court),
     );
@@ -190,7 +188,9 @@ class _ReservePageWidgetState extends State<_ReservePageWidget> {
             )
           else
             SummaryBody(
+              courtType: widget.court.type,
               onChangeState: () {
+                context.read<SummaryProvider>().clearData();
                 setState(() => _selectedIndex = ReserveEnum.reserve);
               },
             ),

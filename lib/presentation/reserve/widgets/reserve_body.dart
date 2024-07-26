@@ -4,30 +4,52 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:tennis_app/core/utils.dart';
 import 'package:tennis_app/core/widgets/btn_tennis.dart';
+import 'package:tennis_app/logic/summary_provider.dart';
 import 'package:tennis_app/logic/trainer_provider.dart';
 import 'package:tennis_app/models/trainer_model.dart';
+import 'package:tennis_app/services/local_service.dart';
 
-class ReserveBody extends StatefulWidget {
+class ReserveBody extends StatelessWidget {
   const ReserveBody({required this.onContinue, super.key});
 
   final VoidCallback onContinue;
 
   @override
-  State<ReserveBody> createState() => _ReserveBodyState();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (context) {
+        return TrainerProvider(service: LocalService());
+      },
+      child: _ReserveBodyWidget(onContinue: onContinue),
+    );
+  }
 }
 
-class _ReserveBodyState extends State<ReserveBody> {
+class _ReserveBodyWidget extends StatefulWidget {
+  const _ReserveBodyWidget({required this.onContinue});
+
+  final VoidCallback onContinue;
+
+  @override
+  State<_ReserveBodyWidget> createState() => _ReserveBodyWidgetState();
+}
+
+class _ReserveBodyWidgetState extends State<_ReserveBodyWidget> {
   final _formKey = GlobalKey<FormState>();
   final _dateController = TextEditingController();
   final _initHourController = TextEditingController();
   final _endHourController = TextEditingController();
   final _textController = TextEditingController();
-  DateTime? _selectedDate;
-  DateTime? _selectedFirstTime;
 
   Future<void> _getTrainers() async {
-    final response = await context.read<TrainerProvider>().getTrainers();
-    response.fold((errorMessage) {}, (_) {});
+    final trainerProvider = context.read<TrainerProvider>();
+    final response = await trainerProvider.getTrainers();
+    response.fold((errorMessage) {}, (_) {
+      if (trainerProvider.trainers.isNotEmpty) {
+        context.read<SummaryProvider>().selectedTrainer =
+            trainerProvider.trainers.first;
+      }
+    });
   }
 
   @override
@@ -50,7 +72,10 @@ class _ReserveBodyState extends State<ReserveBody> {
   @override
   Widget build(BuildContext context) {
     final trainers = context.watch<TrainerProvider>().trainers;
-    final selectedTrainer = context.watch<TrainerProvider>().selectedTrainer;
+    final selectedTrainer = context.watch<SummaryProvider>().selectedTrainer;
+    final selectedDate = context.watch<SummaryProvider>().selectedDate;
+    final selectedFirstTime =
+        context.watch<SummaryProvider>().selectedFirstTime;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -79,7 +104,7 @@ class _ReserveBodyState extends State<ReserveBody> {
               ).toList(),
             ),
             onChanged: (value) {
-              context.read<TrainerProvider>().selectedTrainer = value;
+              context.read<SummaryProvider>().selectedTrainer = value;
             },
           ),
         ),
@@ -109,9 +134,9 @@ class _ReserveBodyState extends State<ReserveBody> {
                       context: context,
                       label: 'Fecha',
                     ),
-                    onChanged: (value) => setState(
-                      () => _selectedDate = value,
-                    ),
+                    onChanged: (value) {
+                      context.read<SummaryProvider>().selectedDate = value;
+                    },
                     validator: (value) {
                       if (value == null) return 'Ingrese una fecha';
 
@@ -120,7 +145,7 @@ class _ReserveBodyState extends State<ReserveBody> {
                     onShowPicker: (context, currentValue) async {
                       return showDatePicker(
                         context: context,
-                        firstDate: DateTime(1900),
+                        firstDate: DateTime.now(),
                         initialDate: currentValue ?? DateTime.now(),
                         lastDate: DateTime(2100),
                       );
@@ -137,16 +162,18 @@ class _ReserveBodyState extends State<ReserveBody> {
                             context: context,
                             label: 'Hora inicio',
                           ),
-                          onChanged: (value) => setState(
-                            () => _selectedFirstTime = value,
-                          ),
+                          onChanged: (value) {
+                            context.read<SummaryProvider>().selectedFirstTime =
+                                value;
+                          },
                           validator: (value) {
                             if (value == null) return 'Ingrese una hora';
 
                             return null;
                           },
                           onShowPicker: (context, currentValue) async {
-                            if (_selectedDate == null) return null;
+                            if (selectedDate == null) return null;
+
                             final time = await showTimePicker(
                               context: context,
                               initialTime: TimeOfDay.fromDateTime(
@@ -154,7 +181,7 @@ class _ReserveBodyState extends State<ReserveBody> {
                               ),
                             );
                             return DateTimeField.combine(
-                              _selectedDate!,
+                              selectedDate,
                               time,
                             );
                           },
@@ -169,21 +196,25 @@ class _ReserveBodyState extends State<ReserveBody> {
                             context: context,
                             label: 'Hora fin',
                           ),
+                          onChanged: (value) {
+                            context.read<SummaryProvider>().selectedLastTime =
+                                value;
+                          },
                           validator: (value) {
                             if (value == null) return 'Ingrese una hora';
 
                             return null;
                           },
                           onShowPicker: (context, currentValue) async {
-                            if (_selectedFirstTime == null) return null;
+                            if (selectedFirstTime == null) return null;
                             final time = await showTimePicker(
                               context: context,
                               initialTime: TimeOfDay.fromDateTime(
-                                _selectedFirstTime!,
+                                selectedFirstTime,
                               ),
                             );
                             return DateTimeField.combine(
-                              _selectedDate!,
+                              selectedDate!,
                               time,
                             );
                           },

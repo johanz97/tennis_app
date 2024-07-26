@@ -1,30 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:tennis_app/core/widgets/btn_outline_tennis.dart';
 import 'package:tennis_app/core/widgets/btn_tennis.dart';
+import 'package:tennis_app/logic/summary_provider.dart';
 
 class SummaryBody extends StatelessWidget {
-  const SummaryBody({required this.onChangeState, super.key});
+  const SummaryBody({
+    required this.onChangeState,
+    required this.courtType,
+    super.key,
+  });
 
   final VoidCallback onChangeState;
+  final String courtType;
 
   @override
   Widget build(BuildContext context) {
+    final selectedTrainer = context.watch<SummaryProvider>().selectedTrainer;
+    final selectedDate = context.watch<SummaryProvider>().selectedDate;
+    final timeToUse = context.watch<SummaryProvider>().timeToUse;
+    final totalPrice = context.watch<SummaryProvider>().totalPrice;
+
     return Column(
       children: [
         Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(color: Colors.blueGrey[50]),
-          child: const Column(
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 'Resumen',
                 style: TextStyle(
                   fontSize: 18,
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -34,12 +46,12 @@ class SummaryBody extends StatelessWidget {
                       children: [
                         _ItemSummary(
                           icon: Icons.sports_tennis,
-                          text: 'Cancha tipo A',
+                          text: 'Cancha tipo $courtType',
                         ),
-                        SizedBox(height: 5),
+                        const SizedBox(height: 5),
                         _ItemSummary(
                           icon: Icons.person_outline_outlined,
-                          text: 'Instructor',
+                          text: selectedTrainer?.name ?? '',
                         ),
                       ],
                     ),
@@ -50,12 +62,12 @@ class SummaryBody extends StatelessWidget {
                       children: [
                         _ItemSummary(
                           icon: Icons.calendar_today_outlined,
-                          text: '10 de julio',
+                          text: selectedDate.toString().substring(0, 10),
                         ),
-                        SizedBox(height: 5),
+                        const SizedBox(height: 5),
                         _ItemSummary(
                           icon: Icons.watch_later_outlined,
-                          text: '2 horas',
+                          text: '$timeToUse horas',
                         ),
                       ],
                     ),
@@ -69,11 +81,11 @@ class SummaryBody extends StatelessWidget {
           padding: const EdgeInsets.all(20),
           child: Column(
             children: [
-              const Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     'Total a pagar',
                     style: TextStyle(
                       fontSize: 18,
@@ -83,17 +95,20 @@ class SummaryBody extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        '\$50',
-                        style: TextStyle(
+                        '\$$totalPrice',
+                        style: const TextStyle(
                           color: Colors.blueAccent,
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
                         ),
                       ),
-                      SizedBox(height: 5),
+                      const SizedBox(height: 5),
                       Text(
-                        'Por 2 horas',
-                        style: TextStyle(fontSize: 12, color: Colors.black38),
+                        'Por $timeToUse horas',
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.black38,
+                        ),
                       ),
                     ],
                   ),
