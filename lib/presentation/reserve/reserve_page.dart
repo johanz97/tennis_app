@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:datetime_picker_formfield_new/datetime_picker_formfield.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -8,9 +9,11 @@ import 'package:tennis_app/core/utils.dart';
 import 'package:tennis_app/core/widgets/btn_icon_tennis.dart';
 import 'package:tennis_app/core/widgets/btn_tennis.dart';
 import 'package:tennis_app/logic/trainer_provider.dart';
+import 'package:tennis_app/logic/weather_provider.dart';
 import 'package:tennis_app/models/court_model.dart';
 import 'package:tennis_app/models/trainer_model.dart';
 import 'package:tennis_app/services/local_service.dart';
+import 'package:tennis_app/services/weather_service.dart';
 
 class ReservePage extends StatelessWidget {
   const ReservePage({required this.court, super.key});
@@ -21,9 +24,20 @@ class ReservePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => TrainerProvider(service: LocalService()),
-      builder: (context, child) => _ReservePageWidget(court: court),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) {
+            return TrainerProvider(service: LocalService());
+          },
+        ),
+        ChangeNotifierProvider(
+          create: (context) {
+            return WeatherProvider(service: WeatherService(Dio()));
+          },
+        ),
+      ],
+      child: _ReservePageWidget(court: court),
     );
   }
 }
@@ -46,13 +60,24 @@ class _ReservePageWidgetState extends State<_ReservePageWidget> {
   DateTime? _selectedDate;
   DateTime? _selectedFirstTime;
 
+  Future<void> _getTrainers() async {
+    final response = await context.read<TrainerProvider>().getTrainers();
+    response.fold((errorMessage) {}, (_) {});
+  }
+
+  Future<void> _getWeather() async {
+    final response = await context.read<WeatherProvider>().getWeather(
+          widget.court.address,
+        );
+    response.fold((errorMessage) {}, (_) {});
+  }
+
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final response = await context.read<TrainerProvider>().getTrainers();
-
-      response.fold((errorMessage) {}, (_) {});
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _getTrainers();
+      _getWeather();
     });
   }
 
@@ -69,6 +94,8 @@ class _ReservePageWidgetState extends State<_ReservePageWidget> {
   Widget build(BuildContext context) {
     final trainers = context.watch<TrainerProvider>().trainers;
     final selectedTrainer = context.watch<TrainerProvider>().selectedTrainer;
+    final isLoading = context.watch<WeatherProvider>().isLoading;
+    final weather = context.watch<WeatherProvider>().weather;
 
     return Scaffold(
       body: ListView(
@@ -198,13 +225,21 @@ class _ReservePageWidgetState extends State<_ReservePageWidget> {
                           style: TextStyle(fontSize: 12, color: Colors.black38),
                         ),
                         const SizedBox(height: 5),
-                        const Row(
-                          children: [
-                            Icon(Icons.cloud_queue_rounded, size: 16),
-                            SizedBox(width: 5),
-                            Text('30%'),
-                          ],
-                        ),
+                        if (isLoading)
+                          const CircularProgressIndicator()
+                        else
+                          Row(
+                            children: [
+                              Icon(
+                                (weather?.tempC ?? 0) > 30
+                                    ? Icons.cloudy_snowing
+                                    : Icons.cloud_queue_rounded,
+                                size: 16,
+                              ),
+                              const SizedBox(width: 5),
+                              Text('${weather?.tempC ?? 0}°C'),
+                            ],
+                          ),
                       ],
                     ),
                   ],
