@@ -17,9 +17,11 @@ class EmailInput extends StatelessWidget {
         r'x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])';
     final regex = RegExp(pattern);
 
-    return value!.isNotEmpty && !regex.hasMatch(value)
-        ? 'Email no válido'
-        : null;
+    return value?.isEmpty ?? true
+        ? 'Campo requerido'
+        : !regex.hasMatch(value!)
+            ? 'Email no válido'
+            : null;
   }
 
   @override

@@ -35,9 +35,11 @@ class _PasswordInputState extends State<PasswordInput> {
         FilteringTextInputFormatter.deny(' '),
       ],
       validator: (value) {
-        if (value?.isEmpty ?? true) return 'Campo requerido';
-
-        return null;
+        return value?.isEmpty ?? true
+            ? 'Campo requerido'
+            : value!.length < 6
+                ? 'La contraseña debe tener mínimo 6 caracteres'
+                : null;
       },
       decoration: decoration(
         context: context,

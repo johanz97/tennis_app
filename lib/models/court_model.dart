@@ -1,5 +1,5 @@
 class CourtModel {
-  CourtModel({
+  const CourtModel({
     required this.id,
     required this.name,
     required this.type,
