@@ -84,7 +84,7 @@ class SummaryBody extends StatelessWidget {
                     children: [
                       Text(
                         '\$50',
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: Colors.blueAccent,
                           fontWeight: FontWeight.bold,
                           fontSize: 18,

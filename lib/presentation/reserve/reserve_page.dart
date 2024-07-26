@@ -1,17 +1,15 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tennis_app/core/widgets/btn_icon_tennis.dart';
+import 'package:tennis_app/core/widgets/weather_info.dart';
 import 'package:tennis_app/logic/trainer_provider.dart';
-import 'package:tennis_app/logic/weather_provider.dart';
 import 'package:tennis_app/models/court_model.dart';
 import 'package:tennis_app/presentation/reserve/widgets/reserve_body.dart';
 import 'package:tennis_app/presentation/reserve/widgets/summary_body.dart';
 
 import 'package:tennis_app/services/local_service.dart';
-import 'package:tennis_app/services/weather_service.dart';
 
 enum ReserveEnum { reserve, summary }
 
@@ -24,19 +22,10 @@ class ReservePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-          create: (context) {
-            return TrainerProvider(service: LocalService());
-          },
-        ),
-        ChangeNotifierProvider(
-          create: (context) {
-            return WeatherProvider(service: WeatherService(Dio()));
-          },
-        ),
-      ],
+    return ChangeNotifierProvider(
+      create: (context) {
+        return TrainerProvider(service: LocalService());
+      },
       child: _ReservePageWidget(court: court),
     );
   }
@@ -54,26 +43,9 @@ class _ReservePageWidget extends StatefulWidget {
 class _ReservePageWidgetState extends State<_ReservePageWidget> {
   ReserveEnum _selectedIndex = ReserveEnum.reserve;
 
-  Future<void> _getWeather() async {
-    final response = await context.read<WeatherProvider>().getWeather(
-          widget.court.address,
-        );
-    response.fold((errorMessage) {}, (_) {});
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _getWeather();
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
-    final isLoading = context.watch<WeatherProvider>().isLoading;
-    final weather = context.watch<WeatherProvider>().weather;
 
     return Scaffold(
       body: ListView(
@@ -201,23 +173,7 @@ class _ReservePageWidgetState extends State<_ReservePageWidget> {
                           style: TextStyle(fontSize: 12, color: Colors.black38),
                         ),
                         const SizedBox(height: 5),
-                        if (isLoading)
-                          const CircularProgressIndicator()
-                        else
-                          Row(
-                            children: [
-                              Icon(
-                                (weather?.tempC ?? 0) < 15
-                                    ? Icons.cloudy_snowing
-                                    : (weather?.tempC ?? 0) > 30
-                                        ? Icons.sunny
-                                        : Icons.cloud_queue_rounded,
-                                size: 16,
-                              ),
-                              const SizedBox(width: 5),
-                              Text('${weather?.tempC ?? 0}°C'),
-                            ],
-                          ),
+                        WeatherInfo(city: widget.court.address),
                       ],
                     ),
                   ],
