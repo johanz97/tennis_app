@@ -9,8 +9,8 @@ import 'package:tennis_app/logic/trainer_provider.dart';
 import 'package:tennis_app/models/trainer_model.dart';
 import 'package:tennis_app/services/local_service.dart';
 
-class ReserveBody extends StatelessWidget {
-  const ReserveBody({required this.onContinue, super.key});
+class BookingBody extends StatelessWidget {
+  const BookingBody({required this.onContinue, super.key});
 
   final VoidCallback onContinue;
 
@@ -20,21 +20,21 @@ class ReserveBody extends StatelessWidget {
       create: (context) {
         return TrainerProvider(service: LocalService());
       },
-      child: _ReserveBodyWidget(onContinue: onContinue),
+      child: _BookingBodyWidget(onContinue: onContinue),
     );
   }
 }
 
-class _ReserveBodyWidget extends StatefulWidget {
-  const _ReserveBodyWidget({required this.onContinue});
+class _BookingBodyWidget extends StatefulWidget {
+  const _BookingBodyWidget({required this.onContinue});
 
   final VoidCallback onContinue;
 
   @override
-  State<_ReserveBodyWidget> createState() => _ReserveBodyWidgetState();
+  State<_BookingBodyWidget> createState() => _BookingBodyWidgetState();
 }
 
-class _ReserveBodyWidgetState extends State<_ReserveBodyWidget> {
+class _BookingBodyWidgetState extends State<_BookingBodyWidget> {
   final _formKey = GlobalKey<FormState>();
   final _dateController = TextEditingController();
   final _initHourController = TextEditingController();

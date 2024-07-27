@@ -4,46 +4,59 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tennis_app/core/widgets/btn_icon_tennis.dart';
 import 'package:tennis_app/core/widgets/weather_info.dart';
+import 'package:tennis_app/logic/bookings_provider.dart';
 import 'package:tennis_app/logic/summary_provider.dart';
 import 'package:tennis_app/models/court_model.dart';
-import 'package:tennis_app/presentation/reserve/widgets/reserve_body.dart';
+import 'package:tennis_app/presentation/reserve/widgets/booking_body.dart';
 import 'package:tennis_app/presentation/reserve/widgets/summary_body.dart';
 
-enum ReserveEnum { reserve, summary }
+enum BookingEnum { reserve, summary }
 
-class ReservePage extends StatelessWidget {
-  const ReservePage({required this.court, super.key});
+class BookingArg {
+  const BookingArg({
+    required this.court,
+    required this.bookingsProvider,
+  });
+
+  final CourtModel court;
+  final BookingsProvider bookingsProvider;
+}
+
+class BookingPage extends StatelessWidget {
+  const BookingPage({required this.arg, super.key});
 
   static String routeName = 'reserve';
 
-  final CourtModel court;
+  final BookingArg arg;
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) {
-        return SummaryProvider(court);
-      },
-      child: _ReservePageWidget(court: court),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => SummaryProvider(court: arg.court),
+        ),
+        ChangeNotifierProvider.value(value: arg.bookingsProvider),
+      ],
+      child: const _BookingPageWidget(),
     );
   }
 }
 
-class _ReservePageWidget extends StatefulWidget {
-  const _ReservePageWidget({required this.court});
-
-  final CourtModel court;
+class _BookingPageWidget extends StatefulWidget {
+  const _BookingPageWidget();
 
   @override
-  State<_ReservePageWidget> createState() => _ReservePageWidgetState();
+  State<_BookingPageWidget> createState() => _BookingPageWidgetState();
 }
 
-class _ReservePageWidgetState extends State<_ReservePageWidget> {
-  ReserveEnum _selectedIndex = ReserveEnum.reserve;
+class _BookingPageWidgetState extends State<_BookingPageWidget> {
+  BookingEnum _selectedIndex = BookingEnum.reserve;
 
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
+    final court = context.watch<SummaryProvider>().court;
 
     return Scaffold(
       body: ListView(
@@ -53,9 +66,9 @@ class _ReservePageWidgetState extends State<_ReservePageWidget> {
             children: [
               CarouselSlider(
                 items: [
-                  if (widget.court.image.isNotEmpty)
+                  if (court.image.isNotEmpty)
                     Image.network(
-                      widget.court.image,
+                      court.image,
                       width: double.infinity,
                       fit: BoxFit.fill,
                     )
@@ -107,7 +120,7 @@ class _ReservePageWidgetState extends State<_ReservePageWidget> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            widget.court.name,
+                            court.name,
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 18,
@@ -115,7 +128,7 @@ class _ReservePageWidgetState extends State<_ReservePageWidget> {
                           ),
                           const SizedBox(height: 5),
                           Text(
-                            'Cancha tipo ${widget.court.type}',
+                            'Cancha tipo ${court.type}',
                             style: const TextStyle(fontSize: 12),
                           ),
                           const SizedBox(height: 5),
@@ -132,7 +145,7 @@ class _ReservePageWidgetState extends State<_ReservePageWidget> {
                               ),
                               const SizedBox(width: 2),
                               Text(
-                                widget.court.available,
+                                court.available,
                                 style: const TextStyle(fontSize: 12),
                               ),
                             ],
@@ -146,7 +159,7 @@ class _ReservePageWidgetState extends State<_ReservePageWidget> {
                               ),
                               const SizedBox(width: 2),
                               Text(
-                                widget.court.address,
+                                court.address,
                                 style: const TextStyle(fontSize: 12),
                               ),
                             ],
@@ -158,7 +171,7 @@ class _ReservePageWidgetState extends State<_ReservePageWidget> {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
-                          '\$${widget.court.cost}',
+                          '\$${court.cost}',
                           style: const TextStyle(
                             color: Colors.blueAccent,
                             fontWeight: FontWeight.bold,
@@ -171,7 +184,7 @@ class _ReservePageWidgetState extends State<_ReservePageWidget> {
                           style: TextStyle(fontSize: 12, color: Colors.black38),
                         ),
                         const SizedBox(height: 5),
-                        WeatherInfo(city: widget.court.address),
+                        WeatherInfo(city: court.address),
                       ],
                     ),
                   ],
@@ -180,18 +193,18 @@ class _ReservePageWidgetState extends State<_ReservePageWidget> {
               ],
             ),
           ),
-          if (_selectedIndex == ReserveEnum.reserve)
-            ReserveBody(
+          if (_selectedIndex == BookingEnum.reserve)
+            BookingBody(
               onContinue: () {
-                setState(() => _selectedIndex = ReserveEnum.summary);
+                setState(() => _selectedIndex = BookingEnum.summary);
               },
             )
           else
             SummaryBody(
-              courtType: widget.court.type,
+              courtType: court.type,
               onChangeState: () {
                 context.read<SummaryProvider>().clearData();
-                setState(() => _selectedIndex = ReserveEnum.reserve);
+                setState(() => _selectedIndex = BookingEnum.reserve);
               },
             ),
         ],

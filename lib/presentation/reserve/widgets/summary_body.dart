@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tennis_app/core/widgets/btn_outline_tennis.dart';
 import 'package:tennis_app/core/widgets/btn_tennis.dart';
+import 'package:tennis_app/logic/bookings_provider.dart';
 import 'package:tennis_app/logic/summary_provider.dart';
 
 class SummaryBody extends StatelessWidget {
@@ -131,8 +132,20 @@ class SummaryBody extends StatelessWidget {
                   children: [
                     BtnTennis(
                       text: 'Pagar',
-                      onTap: () {
-                        context.pop();
+                      onTap: () async {
+                        final summaryProvider = context.read<SummaryProvider>();
+                        final response = await context
+                            .read<BookingsProvider>()
+                            .addBooking(summaryProvider.booking);
+
+                        response.fold(
+                          (errorMessage) {},
+                          (unit) {
+                            if (!context.mounted) return;
+                            context.read<BookingsProvider>().getBookings();
+                            context.pop();
+                          },
+                        );
                       },
                     ),
                     const SizedBox(height: 10),

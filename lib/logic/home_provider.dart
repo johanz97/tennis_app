@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:tennis_app/models/court_model.dart';
 import 'package:tennis_app/services/local_service.dart';
 
-class CourtProvider with ChangeNotifier {
-  CourtProvider({required this.service});
+class HomeProvider with ChangeNotifier {
+  HomeProvider({required this.service});
 
   final LocalService service;
 

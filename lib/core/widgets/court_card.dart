@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:tennis_app/core/widgets/btn_tennis.dart';
 import 'package:tennis_app/core/widgets/weather_info.dart';
+import 'package:tennis_app/logic/bookings_provider.dart';
 import 'package:tennis_app/models/court_model.dart';
-import 'package:tennis_app/presentation/reserve/reserve_page.dart';
+import 'package:tennis_app/presentation/reserve/booking_page.dart';
 
 class CourtCard extends StatelessWidget {
   const CourtCard({required this.court, super.key});
@@ -56,16 +59,16 @@ class CourtCard extends StatelessWidget {
                     style: const TextStyle(fontSize: 12),
                   ),
                   const SizedBox(height: 10),
-                  const Row(
+                  Row(
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.calendar_today_outlined,
                         size: 16,
                       ),
-                      SizedBox(width: 5),
+                      const SizedBox(width: 5),
                       Text(
-                        '9 de Julio 2024',
-                        style: TextStyle(fontSize: 12),
+                        DateFormat('dd MMM yyyy').format(DateTime.now()),
+                        style: const TextStyle(fontSize: 12),
                       ),
                     ],
                   ),
@@ -100,8 +103,11 @@ class CourtCard extends StatelessWidget {
               child: BtnTennis(
                 text: 'Reservar',
                 onTap: () => context.pushNamed(
-                  ReservePage.routeName,
-                  extra: court,
+                  BookingPage.routeName,
+                  extra: BookingArg(
+                    court: court,
+                    bookingsProvider: context.read<BookingsProvider>(),
+                  ),
                 ),
               ),
             ),

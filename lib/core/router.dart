@@ -1,9 +1,8 @@
 import 'package:go_router/go_router.dart';
-import 'package:tennis_app/models/court_model.dart';
 import 'package:tennis_app/presentation/authenticated/authenticated_page.dart';
 import 'package:tennis_app/presentation/authenticated/login_or_register_page.dart';
 import 'package:tennis_app/presentation/home/home_page.dart';
-import 'package:tennis_app/presentation/reserve/reserve_page.dart';
+import 'package:tennis_app/presentation/reserve/booking_page.dart';
 
 final router = GoRouter(
   routes: [
@@ -26,12 +25,12 @@ final router = GoRouter(
       builder: (context, state) => const HomePage(),
     ),
     GoRoute(
-      name: ReservePage.routeName,
-      path: '/${ReservePage.routeName}',
+      name: BookingPage.routeName,
+      path: '/${BookingPage.routeName}',
       builder: (context, state) {
-        final court = state.extra! as CourtModel;
+        final arg = state.extra! as BookingArg;
 
-        return ReservePage(court: court);
+        return BookingPage(arg: arg);
       },
     ),
   ],

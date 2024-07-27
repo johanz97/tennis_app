@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:tennis_app/models/booking_model.dart';
 import 'package:tennis_app/models/court_model.dart';
 import 'package:tennis_app/models/trainer_model.dart';
 
 class SummaryProvider with ChangeNotifier {
-  SummaryProvider(this.court);
+  SummaryProvider({required this.court});
 
   final CourtModel court;
 
@@ -16,6 +18,18 @@ class SummaryProvider with ChangeNotifier {
   DateTime? get selectedDate => _selectedDate;
   DateTime? get selectedFirstTime => _selectedFirstTime;
   DateTime? get selectedLastTime => _selectedLastTime;
+
+  BookingModel get booking => BookingModel(
+        id: court.id,
+        image: court.image,
+        name: court.name,
+        trainer: selectedTrainer!.name,
+        type: court.type,
+        address: court.address,
+        date: DateFormat('dd MMM yyyy').format(selectedDate!).substring(0, 11),
+        time: '$timeToUse',
+        totalCost: totalPrice,
+      );
 
   int get timeToUse {
     final difference = _selectedLastTime!

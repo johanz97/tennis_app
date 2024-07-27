@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tennis_app/logic/authentication_provider.dart';
-import 'package:tennis_app/logic/court_provider.dart';
-import 'package:tennis_app/presentation/home/widgets/booking_body.dart';
+import 'package:tennis_app/logic/bookings_provider.dart';
+import 'package:tennis_app/logic/home_provider.dart';
 import 'package:tennis_app/presentation/home/widgets/favorite_body.dart';
 import 'package:tennis_app/presentation/home/widgets/home_body.dart';
+import 'package:tennis_app/presentation/home/widgets/home_booking_body.dart';
 import 'package:tennis_app/services/firebase_service.dart';
 import 'package:tennis_app/services/local_service.dart';
 
@@ -27,7 +28,12 @@ class HomePage extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) {
-            return CourtProvider(service: LocalService());
+            return HomeProvider(service: LocalService());
+          },
+        ),
+        ChangeNotifierProvider(
+          create: (context) {
+            return BookingsProvider(service: LocalService());
           },
         ),
       ],
@@ -112,6 +118,7 @@ class _HomePageWidgetState extends State<_HomePageWidget> {
                       await context.read<AuthenticationProvider>().logOutUser();
                   if (!context.mounted) return;
                   response.fold((errorMessage) {}, (unit) {
+                    context.read<BookingsProvider>().deleteAllBooking();
                     context.go('/');
                   });
                 },
@@ -124,7 +131,7 @@ class _HomePageWidgetState extends State<_HomePageWidget> {
       body: _selectedIndex == NavBarEnum.home
           ? const HomeBody()
           : _selectedIndex == NavBarEnum.bookings
-              ? const BookingBody()
+              ? const HomeBookingBody()
               : const FavoriteBody(),
       bottomNavigationBar: SafeArea(
         child: Container(
