@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tennis_app/logic/weather_provider.dart';
-import 'package:tennis_app/models/weather_model.dart';
 import 'package:tennis_app/presentation/widgets/alerts/error_alert.dart';
 import 'package:tennis_app/services/dio_services/weather_service.dart';
 
@@ -53,8 +52,8 @@ class _WeatherInfoWidgetState extends State<_WeatherInfoWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final weather = context.select<WeatherProvider, WeatherModel?>(
-      (provider) => provider.weather,
+    final precipitation = context.select<WeatherProvider, double>(
+      (provider) => (provider.weather?.precipitation ?? 0) * 100,
     );
     final isLoading = context.select<WeatherProvider, bool>(
       (provider) => provider.isLoading,
@@ -65,15 +64,15 @@ class _WeatherInfoWidgetState extends State<_WeatherInfoWidget> {
         : Row(
             children: [
               Icon(
-                (weather?.tempC ?? 0) < 15
-                    ? Icons.cloudy_snowing
-                    : (weather?.tempC ?? 0) > 30
-                        ? Icons.sunny
+                precipitation < 15
+                    ? Icons.wb_sunny_outlined
+                    : precipitation > 30
+                        ? Icons.cloudy_snowing
                         : Icons.cloud_queue_rounded,
                 size: 16,
               ),
               const SizedBox(width: 5),
-              Text('${weather?.tempC ?? 0}°C'),
+              Text('$precipitation%'),
             ],
           );
   }
