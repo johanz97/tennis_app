@@ -22,6 +22,24 @@ class _LoginBodyState extends State<LoginBody> {
   final _passwordController = TextEditingController();
   bool _isSavedPassword = false;
 
+  Future<void> _signInUser() async {
+    FocusManager.instance.primaryFocus?.unfocus();
+    if (!_formKey.currentState!.validate()) return;
+
+    final response = await context.read<AuthenticationProvider>().signInUser(
+          email: _emailController.text.trim(),
+          password: _passwordController.text.trim(),
+        );
+
+    if (!context.mounted) return;
+    response.fold((errorMessage) {}, (unit) {
+      context.goNamed(
+        HomePage.routeName,
+        extra: context.read<AuthenticationProvider>(),
+      );
+    });
+  }
+
   @override
   void dispose() {
     _emailController.dispose();
@@ -49,10 +67,7 @@ class _LoginBodyState extends State<LoginBody> {
                   setState(() => _isSavedPassword = value ?? false);
                 },
               ),
-              const Text(
-                'Recordar contraseña',
-                style: TextStyle(fontSize: 15),
-              ),
+              const Text('Recordar contraseña', style: TextStyle(fontSize: 15)),
             ],
           ),
           const SizedBox(height: 50),
@@ -63,24 +78,7 @@ class _LoginBodyState extends State<LoginBody> {
             ),
           ),
           const SizedBox(height: 20),
-          BtnTennis(
-            text: 'Iniciar sesión',
-            onTap: () async {
-              FocusManager.instance.primaryFocus?.unfocus();
-              if (!_formKey.currentState!.validate()) return;
-
-              final response =
-                  await context.read<AuthenticationProvider>().signInUser(
-                        email: _emailController.text.trim(),
-                        password: _passwordController.text.trim(),
-                      );
-
-              if (!context.mounted) return;
-              response.fold((errorMessage) {}, (unit) {
-                context.goNamed(HomePage.routeName);
-              });
-            },
-          ),
+          BtnTennis(text: 'Iniciar sesión', onTap: _signInUser),
           const SizedBox(height: 30),
           FittedBox(
             fit: BoxFit.scaleDown,

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -5,10 +7,11 @@ import 'package:provider/provider.dart';
 import 'package:tennis_app/core/widgets/btn_icon_tennis.dart';
 import 'package:tennis_app/core/widgets/weather_info.dart';
 import 'package:tennis_app/logic/bookings_provider.dart';
+import 'package:tennis_app/logic/favorite_provider.dart';
 import 'package:tennis_app/logic/summary_provider.dart';
 import 'package:tennis_app/models/court_model.dart';
-import 'package:tennis_app/presentation/reserve/widgets/booking_body.dart';
-import 'package:tennis_app/presentation/reserve/widgets/summary_body.dart';
+import 'package:tennis_app/presentation/booking/widgets/booking_body.dart';
+import 'package:tennis_app/presentation/booking/widgets/summary_body.dart';
 
 enum BookingEnum { reserve, summary }
 
@@ -16,10 +19,12 @@ class BookingArg {
   const BookingArg({
     required this.court,
     required this.bookingsProvider,
+    required this.favoriteProvider,
   });
 
   final CourtModel court;
   final BookingsProvider bookingsProvider;
+  final FavoriteProvider favoriteProvider;
 }
 
 class BookingPage extends StatelessWidget {
@@ -37,6 +42,7 @@ class BookingPage extends StatelessWidget {
           create: (context) => SummaryProvider(court: arg.court),
         ),
         ChangeNotifierProvider.value(value: arg.bookingsProvider),
+        ChangeNotifierProvider.value(value: arg.favoriteProvider),
       ],
       child: const _BookingPageWidget(),
     );
@@ -53,10 +59,30 @@ class _BookingPageWidget extends StatefulWidget {
 class _BookingPageWidgetState extends State<_BookingPageWidget> {
   BookingEnum _selectedIndex = BookingEnum.reserve;
 
+  Future<void> _onTapFavorite() async {
+    final favoriteProvider = context.read<FavoriteProvider>();
+    final court = context.read<SummaryProvider>().court;
+    final response = favoriteProvider.isFavorite(court.id)
+        ? await favoriteProvider.deleteFavorite(
+            court: court,
+          )
+        : await favoriteProvider.addFavorite(court);
+    unawaited(favoriteProvider.getFavorites());
+    response.fold(
+      (errorMessage) {},
+      (unit) {},
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
-    final court = context.watch<SummaryProvider>().court;
+    final court = context.select<SummaryProvider, CourtModel>(
+      (provider) => provider.court,
+    );
+    final isFavorite = context.select<FavoriteProvider, bool>(
+      (provider) => provider.isFavorite(court.id),
+    );
 
     return Scaffold(
       body: ListView(
@@ -91,14 +117,14 @@ class _BookingPageWidgetState extends State<_BookingPageWidget> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      BtnIconTennis(
-                        icon: Icons.arrow_back,
-                        onTap: context.pop,
-                      ),
-                      const Icon(
-                        Icons.favorite_border,
-                        size: 30,
-                        color: Colors.white,
+                      BtnIconTennis(icon: Icons.arrow_back, onTap: context.pop),
+                      IconButton(
+                        onPressed: _onTapFavorite,
+                        icon: Icon(
+                          isFavorite ? Icons.favorite : Icons.favorite_border,
+                          size: 30,
+                          color: isFavorite ? Colors.red : Colors.white,
+                        ),
                       ),
                     ],
                   ),
@@ -139,10 +165,7 @@ class _BookingPageWidgetState extends State<_BookingPageWidget> {
                                 style: TextStyle(fontSize: 12),
                               ),
                               const SizedBox(width: 5),
-                              const Icon(
-                                Icons.watch_later_outlined,
-                                size: 12,
-                              ),
+                              const Icon(Icons.watch_later_outlined, size: 12),
                               const SizedBox(width: 2),
                               Text(
                                 court.available,
@@ -153,10 +176,7 @@ class _BookingPageWidgetState extends State<_BookingPageWidget> {
                           const SizedBox(height: 5),
                           Row(
                             children: [
-                              const Icon(
-                                Icons.location_on_outlined,
-                                size: 12,
-                              ),
+                              const Icon(Icons.location_on_outlined, size: 12),
                               const SizedBox(width: 2),
                               Text(
                                 court.address,

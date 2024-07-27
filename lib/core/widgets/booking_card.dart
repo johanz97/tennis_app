@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:tennis_app/core/widgets/weather_info.dart';
 import 'package:tennis_app/logic/authentication_provider.dart';
@@ -10,25 +12,29 @@ class BookingCard extends StatelessWidget {
 
   final BookingModel booking;
 
+  Future<void> _onDeleteBooking(BuildContext context) async {
+    final bookingsProvider = context.read<BookingsProvider>();
+    final response = await bookingsProvider.deleteBooking(
+      booking: booking,
+    );
+
+    response.fold(
+      (errorMessage) {},
+      (unit) {
+        bookingsProvider.getBookings();
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final user = context.watch<AuthenticationProvider>().user;
+    final user = context.select<AuthenticationProvider, User?>(
+      (provider) => provider.user,
+    );
 
     return Dismissible(
       key: Key(booking.id),
-      onDismissed: (direction) async {
-        final bookingsProvider = context.read<BookingsProvider>();
-        final response = await bookingsProvider.deleteBooking(
-          booking: booking,
-        );
-
-        response.fold(
-          (errorMessage) {},
-          (unit) {
-            bookingsProvider.getBookings();
-          },
-        );
-      },
+      onDismissed: (_) => _onDeleteBooking(context),
       background: Container(color: Colors.red),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -74,7 +80,7 @@ class BookingCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 5),
                     Text(
-                      booking.date,
+                      DateFormat('dd MMM yyyy').format(booking.date),
                       style: const TextStyle(fontSize: 12),
                     ),
                   ],

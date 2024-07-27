@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:tennis_app/models/booking_model.dart';
 import 'package:tennis_app/models/court_model.dart';
 import 'package:tennis_app/models/trainer_model.dart';
@@ -26,7 +25,7 @@ class SummaryProvider with ChangeNotifier {
         trainer: selectedTrainer!.name,
         type: court.type,
         address: court.address,
-        date: DateFormat('dd MMM yyyy').format(selectedDate!).substring(0, 11),
+        date: selectedDate!,
         time: '$timeToUse',
         totalCost: totalPrice,
       );

@@ -3,38 +3,37 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tennis_app/logic/authentication_provider.dart';
 import 'package:tennis_app/logic/bookings_provider.dart';
+import 'package:tennis_app/logic/favorite_provider.dart';
 import 'package:tennis_app/logic/home_provider.dart';
 import 'package:tennis_app/presentation/home/widgets/favorite_body.dart';
 import 'package:tennis_app/presentation/home/widgets/home_body.dart';
 import 'package:tennis_app/presentation/home/widgets/home_booking_body.dart';
-import 'package:tennis_app/services/firebase_service.dart';
-import 'package:tennis_app/services/local_service.dart';
+import 'package:tennis_app/services/booking_service.dart';
+import 'package:tennis_app/services/court_service.dart';
+import 'package:tennis_app/services/favorite_service.dart';
 
 enum NavBarEnum { home, bookings, favorite }
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  const HomePage({required this.authenticationProvider, super.key});
 
   static String routeName = 'home';
+
+  final AuthenticationProvider authenticationProvider;
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider.value(value: authenticationProvider),
         ChangeNotifierProvider(
-          create: (context) {
-            return AuthenticationProvider(service: FirebaseService());
-          },
+          create: (context) => HomeProvider(service: CourtService()),
         ),
         ChangeNotifierProvider(
-          create: (context) {
-            return HomeProvider(service: LocalService());
-          },
+          create: (context) => BookingsProvider(service: BookingService()),
         ),
         ChangeNotifierProvider(
-          create: (context) {
-            return BookingsProvider(service: LocalService());
-          },
+          create: (context) => FavoriteProvider(service: FavoriteService()),
         ),
       ],
       child: const _HomePageWidget(),
@@ -52,10 +51,42 @@ class _HomePageWidget extends StatefulWidget {
 class _HomePageWidgetState extends State<_HomePageWidget> {
   NavBarEnum _selectedIndex = NavBarEnum.home;
 
+  Future<void> _getBookings() async {
+    final response = await context.read<BookingsProvider>().getBookings();
+
+    response.fold((errorMessage) {}, (_) {});
+  }
+
+  Future<void> _getFavorites() async {
+    final response = await context.read<FavoriteProvider>().getFavorites();
+
+    response.fold((errorMessage) {}, (_) {});
+  }
+
+  Future<void> _onCloseSession() async {
+    final response = await context.read<AuthenticationProvider>().logOutUser();
+    if (!context.mounted) return;
+    response.fold((errorMessage) {}, (unit) {
+      context.read<BookingsProvider>().deleteAllBooking();
+      context.read<FavoriteProvider>().deleteAllFavorites();
+      context.go('/');
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _getBookings();
+      _getFavorites();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: false,
         flexibleSpace: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
@@ -69,7 +100,6 @@ class _HomePageWidgetState extends State<_HomePageWidget> {
             ),
           ),
         ),
-        centerTitle: false,
         title: Row(
           children: [
             const Text(
@@ -94,10 +124,7 @@ class _HomePageWidgetState extends State<_HomePageWidget> {
               ),
               child: const Text(
                 ' court ',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 25,
-                ),
+                style: TextStyle(color: Colors.white, fontSize: 25),
               ),
             ),
           ],
@@ -112,16 +139,8 @@ class _HomePageWidgetState extends State<_HomePageWidget> {
             itemBuilder: (context) => [
               PopupMenuItem(
                 value: 0,
+                onTap: _onCloseSession,
                 child: const Text('Cerrar sesión'),
-                onTap: () async {
-                  final response =
-                      await context.read<AuthenticationProvider>().logOutUser();
-                  if (!context.mounted) return;
-                  response.fold((errorMessage) {}, (unit) {
-                    context.read<BookingsProvider>().deleteAllBooking();
-                    context.go('/');
-                  });
-                },
               ),
             ],
           ),
@@ -131,7 +150,11 @@ class _HomePageWidgetState extends State<_HomePageWidget> {
       body: _selectedIndex == NavBarEnum.home
           ? const HomeBody()
           : _selectedIndex == NavBarEnum.bookings
-              ? const HomeBookingBody()
+              ? HomeBookingBody(
+                  onNewBooking: () => setState(
+                    () => _selectedIndex = NavBarEnum.home,
+                  ),
+                )
               : const FavoriteBody(),
       bottomNavigationBar: SafeArea(
         child: Container(

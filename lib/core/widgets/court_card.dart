@@ -5,13 +5,25 @@ import 'package:provider/provider.dart';
 import 'package:tennis_app/core/widgets/btn_tennis.dart';
 import 'package:tennis_app/core/widgets/weather_info.dart';
 import 'package:tennis_app/logic/bookings_provider.dart';
+import 'package:tennis_app/logic/favorite_provider.dart';
 import 'package:tennis_app/models/court_model.dart';
-import 'package:tennis_app/presentation/reserve/booking_page.dart';
+import 'package:tennis_app/presentation/booking/booking_page.dart';
 
 class CourtCard extends StatelessWidget {
   const CourtCard({required this.court, super.key});
 
   final CourtModel court;
+
+  void _onBooking(BuildContext context) {
+    context.pushNamed(
+      BookingPage.routeName,
+      extra: BookingArg(
+        court: court,
+        bookingsProvider: context.read<BookingsProvider>(),
+        favoriteProvider: context.read<FavoriteProvider>(),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -102,13 +114,7 @@ class CourtCard extends StatelessWidget {
               ),
               child: BtnTennis(
                 text: 'Reservar',
-                onTap: () => context.pushNamed(
-                  BookingPage.routeName,
-                  extra: BookingArg(
-                    court: court,
-                    bookingsProvider: context.read<BookingsProvider>(),
-                  ),
-                ),
+                onTap: () => _onBooking(context),
               ),
             ),
           ],

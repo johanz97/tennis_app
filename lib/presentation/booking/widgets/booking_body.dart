@@ -7,7 +7,7 @@ import 'package:tennis_app/core/widgets/btn_tennis.dart';
 import 'package:tennis_app/logic/summary_provider.dart';
 import 'package:tennis_app/logic/trainer_provider.dart';
 import 'package:tennis_app/models/trainer_model.dart';
-import 'package:tennis_app/services/local_service.dart';
+import 'package:tennis_app/services/court_service.dart';
 
 class BookingBody extends StatelessWidget {
   const BookingBody({required this.onContinue, super.key});
@@ -18,7 +18,7 @@ class BookingBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) {
-        return TrainerProvider(service: LocalService());
+        return TrainerProvider(service: CourtService());
       },
       child: _BookingBodyWidget(onContinue: onContinue),
     );
@@ -71,11 +71,18 @@ class _BookingBodyWidgetState extends State<_BookingBodyWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final trainers = context.watch<TrainerProvider>().trainers;
-    final selectedTrainer = context.watch<SummaryProvider>().selectedTrainer;
-    final selectedDate = context.watch<SummaryProvider>().selectedDate;
-    final selectedFirstTime =
-        context.watch<SummaryProvider>().selectedFirstTime;
+    final trainers = context.select<TrainerProvider, List<TrainerModel>>(
+      (provider) => provider.trainers,
+    );
+    final selectedTrainer = context.select<SummaryProvider, TrainerModel?>(
+      (provider) => provider.selectedTrainer,
+    );
+    final selectedDate = context.select<SummaryProvider, DateTime?>(
+      (provider) => provider.selectedDate,
+    );
+    final selectedFirstTime = context.select<SummaryProvider, DateTime?>(
+      (provider) => provider.selectedFirstTime,
+    );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -130,7 +137,7 @@ class _BookingBodyWidgetState extends State<_BookingBodyWidget> {
                   DateTimeField(
                     controller: _dateController,
                     format: DateFormat('yyyy-MM-dd'),
-                    decoration: decorationDate(
+                    decoration: decorationWhite(
                       context: context,
                       label: 'Fecha',
                     ),
@@ -158,7 +165,7 @@ class _BookingBodyWidgetState extends State<_BookingBodyWidget> {
                         child: DateTimeField(
                           controller: _initHourController,
                           format: DateFormat('HH:mm'),
-                          decoration: decorationDate(
+                          decoration: decorationWhite(
                             context: context,
                             label: 'Hora inicio',
                           ),
@@ -192,7 +199,7 @@ class _BookingBodyWidgetState extends State<_BookingBodyWidget> {
                         child: DateTimeField(
                           controller: _endHourController,
                           format: DateFormat('HH:mm'),
-                          decoration: decorationDate(
+                          decoration: decorationWhite(
                             context: context,
                             label: 'Hora fin',
                           ),

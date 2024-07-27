@@ -21,6 +21,18 @@ class CourtModel {
     );
   }
 
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'image': image,
+      'name': name,
+      'type': type,
+      'available': available,
+      'address': address,
+      'cost': cost,
+    };
+  }
+
   final String id;
   final String image;
   final String name;

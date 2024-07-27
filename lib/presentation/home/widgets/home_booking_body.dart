@@ -3,14 +3,21 @@ import 'package:provider/provider.dart';
 import 'package:tennis_app/core/widgets/booking_card.dart';
 import 'package:tennis_app/core/widgets/btn_tennis.dart';
 import 'package:tennis_app/logic/bookings_provider.dart';
+import 'package:tennis_app/models/booking_model.dart';
 
 class HomeBookingBody extends StatelessWidget {
-  const HomeBookingBody({super.key});
+  const HomeBookingBody({required this.onNewBooking, super.key});
+
+  final VoidCallback onNewBooking;
 
   @override
   Widget build(BuildContext context) {
-    final isLoading = context.watch<BookingsProvider>().isLoading;
-    final bookings = context.watch<BookingsProvider>().bookings;
+    final isLoading = context.select<BookingsProvider, bool>(
+      (provider) => provider.isLoading,
+    );
+    final bookings = context.select<BookingsProvider, List<BookingModel>>(
+      (provider) => provider.bookings,
+    );
 
     return Column(
       children: [
@@ -22,7 +29,7 @@ class HomeBookingBody extends StatelessWidget {
               BtnTennis(
                 text: 'Programar Reservas',
                 icon: Icons.calendar_today_outlined,
-                onTap: () {},
+                onTap: onNewBooking,
               ),
               const SizedBox(height: 15),
               const Align(
@@ -41,8 +48,9 @@ class HomeBookingBody extends StatelessWidget {
               ? const Center(child: CircularProgressIndicator())
               : ListView.separated(
                   itemCount: bookings.length,
-                  separatorBuilder: (context, index) =>
-                      const SizedBox(height: 10),
+                  separatorBuilder: (context, index) {
+                    return const SizedBox(height: 10);
+                  },
                   itemBuilder: (context, index) => Container(
                     margin: const EdgeInsets.symmetric(horizontal: 20),
                     padding: const EdgeInsets.all(10),

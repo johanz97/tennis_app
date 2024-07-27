@@ -26,6 +26,25 @@ class _RegisterBodyState extends State<RegisterBody> {
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
 
+  Future<void> _onCreateUser() async {
+    FocusManager.instance.primaryFocus?.unfocus();
+    if (!_formKey.currentState!.validate()) return;
+
+    final response = await context.read<AuthenticationProvider>().createUser(
+          name: _nameController.text.trim(),
+          email: _emailController.text.trim(),
+          password: _passwordController.text.trim(),
+        );
+
+    if (!context.mounted) return;
+    response.fold((errorMessage) {}, (unit) {
+      context.goNamed(
+        HomePage.routeName,
+        extra: context.read<AuthenticationProvider>(),
+      );
+    });
+  }
+
   @override
   void dispose() {
     _nameController.dispose();
@@ -101,22 +120,7 @@ class _RegisterBodyState extends State<RegisterBody> {
           const SizedBox(height: 30),
           BtnTennis(
             text: 'Regístrarme',
-            onTap: () async {
-              FocusManager.instance.primaryFocus?.unfocus();
-              if (!_formKey.currentState!.validate()) return;
-
-              final response =
-                  await context.read<AuthenticationProvider>().createUser(
-                        name: _nameController.text.trim(),
-                        email: _emailController.text.trim(),
-                        password: _passwordController.text.trim(),
-                      );
-
-              if (!context.mounted) return;
-              response.fold((errorMessage) {}, (unit) {
-                context.goNamed(HomePage.routeName);
-              });
-            },
+            onTap: _onCreateUser,
           ),
           const SizedBox(height: 30),
           FittedBox(

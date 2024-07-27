@@ -6,7 +6,7 @@ import 'package:tennis_app/core/widgets/btn_tennis.dart';
 import 'package:tennis_app/logic/authentication_provider.dart';
 import 'package:tennis_app/presentation/authenticated/login_or_register_page.dart';
 import 'package:tennis_app/presentation/home/home_page.dart';
-import 'package:tennis_app/services/firebase_service.dart';
+import 'package:tennis_app/services/authenticated_service.dart';
 
 class AuthenticatedPage extends StatelessWidget {
   const AuthenticatedPage({super.key});
@@ -14,7 +14,8 @@ class AuthenticatedPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => AuthenticationProvider(service: FirebaseService()),
+      create: (context) =>
+          AuthenticationProvider(service: AuthenticatedService()),
       builder: (context, child) => const _AuthenticatedPageWidget(),
     );
   }
@@ -38,7 +39,10 @@ class _AuthenticatedPageStateWidget extends State<_AuthenticatedPageWidget> {
     final user = context.read<AuthenticationProvider>().user;
     setState(() => _isLoading = false);
     if (user != null) {
-      context.goNamed(HomePage.routeName);
+      context.goNamed(
+        HomePage.routeName,
+        extra: context.read<AuthenticationProvider>(),
+      );
     }
   }
 

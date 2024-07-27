@@ -29,9 +29,7 @@ class _PasswordInputState extends State<PasswordInput> {
       textInputAction: TextInputAction.next,
       keyboardType: TextInputType.visiblePassword,
       inputFormatters: [
-        FilteringTextInputFormatter.allow(
-          RegExp('[a-z A-Z á-ú Á-Ú 0-9 ]'),
-        ),
+        FilteringTextInputFormatter.allow(RegExp('[a-z A-Z á-ú Á-Ú 0-9 ]')),
         FilteringTextInputFormatter.deny(' '),
       ],
       validator: (value) {
@@ -46,9 +44,7 @@ class _PasswordInputState extends State<PasswordInput> {
         label: widget.label,
         icon: Icons.lock_outline_rounded,
         suffixIcon: IconButton(
-          onPressed: () => setState(
-            () => _isObscured = !_isObscured,
-          ),
+          onPressed: () => setState(() => _isObscured = !_isObscured),
           icon: Icon(
             !_isObscured
                 ? Icons.visibility_off_outlined

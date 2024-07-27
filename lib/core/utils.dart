@@ -25,7 +25,7 @@ InputDecoration decoration({
   );
 }
 
-InputDecoration decorationDate({
+InputDecoration decorationWhite({
   required BuildContext context,
   required String label,
 }) {

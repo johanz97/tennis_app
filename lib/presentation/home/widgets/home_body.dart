@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tennis_app/core/widgets/booking_card.dart';
@@ -5,6 +6,8 @@ import 'package:tennis_app/core/widgets/court_card.dart';
 import 'package:tennis_app/logic/authentication_provider.dart';
 import 'package:tennis_app/logic/bookings_provider.dart';
 import 'package:tennis_app/logic/home_provider.dart';
+import 'package:tennis_app/models/booking_model.dart';
+import 'package:tennis_app/models/court_model.dart';
 
 class HomeBody extends StatefulWidget {
   const HomeBody({super.key});
@@ -20,28 +23,31 @@ class _HomeBodyState extends State<HomeBody> {
     response.fold((errorMessage) {}, (_) {});
   }
 
-  Future<void> _getBookings() async {
-    final response = await context.read<BookingsProvider>().getBookings();
-
-    response.fold((errorMessage) {}, (_) {});
-  }
-
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _getCourts();
-      _getBookings();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final user = context.watch<AuthenticationProvider>().user;
-    final isLoading = context.watch<HomeProvider>().isLoading;
-    final courts = context.watch<HomeProvider>().courts;
-    final isLoadingBookings = context.watch<BookingsProvider>().isLoading;
-    final bookings = context.watch<BookingsProvider>().bookings;
+    final user = context.select<AuthenticationProvider, User?>(
+      (provider) => provider.user,
+    );
+    final isLoading = context.select<HomeProvider, bool>(
+      (provider) => provider.isLoading,
+    );
+    final courts = context.select<HomeProvider, List<CourtModel>>(
+      (provider) => provider.courts,
+    );
+    final isLoadingBookings = context.select<BookingsProvider, bool>(
+      (provider) => provider.isLoading,
+    );
+    final bookings = context.select<BookingsProvider, List<BookingModel>>(
+      (provider) => provider.bookings,
+    );
 
     return ListView(
       children: [
@@ -61,10 +67,7 @@ class _HomeBodyState extends State<HomeBody> {
             children: [
               const Text(
                 'Canchas',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10),
               SizedBox(

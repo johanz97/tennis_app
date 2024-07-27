@@ -1,12 +1,12 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:tennis_app/models/booking_model.dart';
-import 'package:tennis_app/services/local_service.dart';
+import 'package:tennis_app/services/booking_service.dart';
 
 class BookingsProvider with ChangeNotifier {
   BookingsProvider({required this.service});
 
-  final LocalService service;
+  final BookingService service;
 
   final List<BookingModel> _bookings = [];
   bool _isLoading = false;

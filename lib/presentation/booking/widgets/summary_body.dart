@@ -5,6 +5,7 @@ import 'package:tennis_app/core/widgets/btn_outline_tennis.dart';
 import 'package:tennis_app/core/widgets/btn_tennis.dart';
 import 'package:tennis_app/logic/bookings_provider.dart';
 import 'package:tennis_app/logic/summary_provider.dart';
+import 'package:tennis_app/models/trainer_model.dart';
 
 class SummaryBody extends StatelessWidget {
   const SummaryBody({
@@ -16,12 +17,36 @@ class SummaryBody extends StatelessWidget {
   final VoidCallback onChangeState;
   final String courtType;
 
+  Future<void> _onPayBooking(BuildContext context) async {
+    final summaryProvider = context.read<SummaryProvider>();
+    final response = await context
+        .read<BookingsProvider>()
+        .addBooking(summaryProvider.booking);
+
+    response.fold(
+      (errorMessage) {},
+      (unit) {
+        if (!context.mounted) return;
+        context.read<BookingsProvider>().getBookings();
+        context.pop();
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final selectedTrainer = context.watch<SummaryProvider>().selectedTrainer;
-    final selectedDate = context.watch<SummaryProvider>().selectedDate;
-    final timeToUse = context.watch<SummaryProvider>().timeToUse;
-    final totalPrice = context.watch<SummaryProvider>().totalPrice;
+    final selectedTrainer = context.select<SummaryProvider, TrainerModel?>(
+      (provider) => provider.selectedTrainer,
+    );
+    final selectedDate = context.select<SummaryProvider, DateTime?>(
+      (provider) => provider.selectedDate,
+    );
+    final timeToUse = context.select<SummaryProvider, int>(
+      (provider) => provider.timeToUse,
+    );
+    final totalPrice = context.select<SummaryProvider, String>(
+      (provider) => provider.totalPrice,
+    );
 
     return Column(
       children: [
@@ -31,12 +56,7 @@ class SummaryBody extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Resumen',
-                style: TextStyle(
-                  fontSize: 18,
-                ),
-              ),
+              const Text('Resumen', style: TextStyle(fontSize: 18)),
               const SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -86,12 +106,7 @@ class SummaryBody extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Total a pagar',
-                    style: TextStyle(
-                      fontSize: 18,
-                    ),
-                  ),
+                  const Text('Total a pagar', style: TextStyle(fontSize: 18)),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
@@ -132,21 +147,7 @@ class SummaryBody extends StatelessWidget {
                   children: [
                     BtnTennis(
                       text: 'Pagar',
-                      onTap: () async {
-                        final summaryProvider = context.read<SummaryProvider>();
-                        final response = await context
-                            .read<BookingsProvider>()
-                            .addBooking(summaryProvider.booking);
-
-                        response.fold(
-                          (errorMessage) {},
-                          (unit) {
-                            if (!context.mounted) return;
-                            context.read<BookingsProvider>().getBookings();
-                            context.pop();
-                          },
-                        );
-                      },
+                      onTap: () => _onPayBooking(context),
                     ),
                     const SizedBox(height: 10),
                     SafeArea(

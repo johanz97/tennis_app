@@ -10,9 +10,9 @@ class WeatherService extends DioInterceptors {
 
   Future<Either<String, WeatherModel?>> fetchWeather(String city) async {
     try {
-      final response = await dioWithInterceptors.get<Map<String, dynamic>>(
-        'http://api.weatherapi.com/v1/current.json?key=${Environment.apiWeather}&q=$city&aqi=no',
-      );
+      final url =
+          '${Environment.baseUrlWeather}/v1/current.json?key=${Environment.apiWeather}&q=$city&aqi=no';
+      final response = await dioWithInterceptors.get<Map<String, dynamic>>(url);
 
       return right(
         response.data?['current'] == null

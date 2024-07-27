@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class FirebaseService {
+class AuthenticatedService {
   User? get user => FirebaseAuth.instance.currentUser;
 
   Future<Either<String, Unit>> createUser({

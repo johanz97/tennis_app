@@ -6,7 +6,7 @@ import 'package:tennis_app/logic/authentication_provider.dart';
 
 import 'package:tennis_app/presentation/authenticated/widgets/login_body.dart';
 import 'package:tennis_app/presentation/authenticated/widgets/register_body.dart';
-import 'package:tennis_app/services/firebase_service.dart';
+import 'package:tennis_app/services/authenticated_service.dart';
 
 enum LoginOrRegisterEnum { login, register }
 
@@ -20,7 +20,8 @@ class LoginOrRegisterPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => AuthenticationProvider(service: FirebaseService()),
+      create: (context) =>
+          AuthenticationProvider(service: AuthenticatedService()),
       builder: (context, child) => _LoginOrRegisterPageWidget(section),
     );
   }
@@ -49,7 +50,9 @@ class _LoginOrRegisterPageWidgetState
 
   @override
   Widget build(BuildContext context) {
-    final isLoading = context.watch<AuthenticationProvider>().isLoading;
+    final isLoading = context.select<AuthenticationProvider, bool>(
+      (provider) => provider.isLoading,
+    );
 
     return Scaffold(
       body: Stack(

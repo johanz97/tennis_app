@@ -1,12 +1,12 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:tennis_app/models/court_model.dart';
-import 'package:tennis_app/services/local_service.dart';
+import 'package:tennis_app/services/court_service.dart';
 
 class HomeProvider with ChangeNotifier {
   HomeProvider({required this.service});
 
-  final LocalService service;
+  final CourtService service;
 
   final List<CourtModel> _courts = [];
   bool _isLoading = false;

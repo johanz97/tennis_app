@@ -1,7 +1,5 @@
 import 'package:dio/dio.dart';
 
-int retryCount = 0;
-
 class DioInterceptors {
   DioInterceptors(this._dioClient) {
     _addInterceptors();
@@ -13,7 +11,6 @@ class DioInterceptors {
     _dioClient.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) {
-          options.validateStatus = (status) => status! < 1000;
           options.headers['Content-Type'] = 'application/json';
           options.headers['accept'] = 'application/json';
 

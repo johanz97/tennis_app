@@ -1,12 +1,12 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:tennis_app/models/trainer_model.dart';
-import 'package:tennis_app/services/local_service.dart';
+import 'package:tennis_app/services/court_service.dart';
 
 class TrainerProvider with ChangeNotifier {
   TrainerProvider({required this.service});
 
-  final LocalService service;
+  final CourtService service;
 
   final List<TrainerModel> _trainers = [];
   bool _isLoading = false;

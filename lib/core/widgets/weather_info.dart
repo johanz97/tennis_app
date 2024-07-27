@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tennis_app/logic/weather_provider.dart';
+import 'package:tennis_app/models/weather_model.dart';
 import 'package:tennis_app/services/weather_service.dart';
 
 class WeatherInfo extends StatelessWidget {
@@ -42,8 +43,12 @@ class _WeatherInfoWidgetState extends State<_WeatherInfoWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final isLoading = context.watch<WeatherProvider>().isLoading;
-    final weather = context.watch<WeatherProvider>().weather;
+    final weather = context.select<WeatherProvider, WeatherModel?>(
+      (provider) => provider.weather,
+    );
+    final isLoading = context.select<WeatherProvider, bool>(
+      (provider) => provider.isLoading,
+    );
 
     return isLoading
         ? const CircularProgressIndicator()

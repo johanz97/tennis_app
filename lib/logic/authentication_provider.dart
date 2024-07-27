@@ -1,12 +1,12 @@
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:tennis_app/services/firebase_service.dart';
+import 'package:tennis_app/services/authenticated_service.dart';
 
 class AuthenticationProvider with ChangeNotifier {
   AuthenticationProvider({required this.service});
 
-  final FirebaseService service;
+  final AuthenticatedService service;
 
   bool _isLoading = false;
 
