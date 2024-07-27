@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tennis_app/logic/booking/summary_provider.dart';
 import 'package:tennis_app/logic/home/bookings_provider.dart';
+import 'package:tennis_app/models/court_model.dart';
 import 'package:tennis_app/models/trainer_model.dart';
 import 'package:tennis_app/presentation/widgets/alerts/error_alert.dart';
 import 'package:tennis_app/presentation/widgets/buttons/btn_outline_tennis.dart';
@@ -11,18 +14,37 @@ import 'package:tennis_app/presentation/widgets/buttons/btn_tennis.dart';
 class SummaryBody extends StatelessWidget {
   const SummaryBody({
     required this.onChangeState,
-    required this.courtType,
+    required this.court,
     super.key,
   });
 
   final VoidCallback onChangeState;
-  final String courtType;
+  final CourtModel court;
 
   Future<void> _onPayBooking(BuildContext context) async {
     final summaryProvider = context.read<SummaryProvider>();
-    final response = await context
-        .read<BookingsProvider>()
-        .addBooking(summaryProvider.booking);
+    final bookingsProvider = context.read<BookingsProvider>();
+    final hasBooking = bookingsProvider.hasBooking(
+      courtId: court.id,
+      date: summaryProvider.selectedDate!,
+    );
+
+    if (!hasBooking) {
+      unawaited(
+        showDialog<void>(
+          context: context,
+          builder: (context) => const ErrorAlert(
+            text: 'Cancha ocupada por el dia de hoy',
+          ),
+        ),
+      );
+
+      return;
+    }
+
+    final response = await bookingsProvider.addBooking(
+      summaryProvider.booking,
+    );
 
     if (!context.mounted) return;
     response.fold(
@@ -33,7 +55,7 @@ class SummaryBody extends StatelessWidget {
         );
       },
       (unit) {
-        context.read<BookingsProvider>().getBookings();
+        bookingsProvider.getBookings();
         context.pop();
       },
     );
@@ -73,7 +95,7 @@ class SummaryBody extends StatelessWidget {
                       children: [
                         _ItemSummary(
                           icon: Icons.sports_tennis,
-                          text: 'Cancha tipo $courtType',
+                          text: 'Cancha tipo ${court.type}',
                         ),
                         const SizedBox(height: 5),
                         _ItemSummary(

@@ -8,6 +8,8 @@ class TrainerModel {
     );
   }
 
+  factory TrainerModel.toTest() => const TrainerModel(id: '00', name: 'Test');
+
   final String id;
   final String name;
 }

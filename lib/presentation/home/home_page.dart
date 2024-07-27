@@ -91,8 +91,8 @@ class _HomePageWidgetState extends State<_HomePageWidget> {
           context: context,
           builder: (context) {
             return const ConfirmOperationAlert(
-              text:
-                  'Al cerrar sesión perdera todos sus registros, ¿Desea continuar?',
+              text: 'Al cerrar sesión perdera todos'
+                  ' sus registros, ¿Desea continuar?',
             );
           },
         ) ??

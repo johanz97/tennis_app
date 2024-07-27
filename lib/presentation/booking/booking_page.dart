@@ -192,8 +192,10 @@ class _BookingPageWidgetState extends State<_BookingPageWidget> {
                                   style: TextStyle(fontSize: 12),
                                 ),
                                 const SizedBox(width: 5),
-                                const Icon(Icons.watch_later_outlined,
-                                    size: 12),
+                                const Icon(
+                                  Icons.watch_later_outlined,
+                                  size: 12,
+                                ),
                                 const SizedBox(width: 2),
                                 Text(
                                   court.available,
@@ -204,8 +206,10 @@ class _BookingPageWidgetState extends State<_BookingPageWidget> {
                             const SizedBox(height: 5),
                             Row(
                               children: [
-                                const Icon(Icons.location_on_outlined,
-                                    size: 12),
+                                const Icon(
+                                  Icons.location_on_outlined,
+                                  size: 12,
+                                ),
                                 const SizedBox(width: 2),
                                 Text(
                                   court.address,
@@ -251,7 +255,7 @@ class _BookingPageWidgetState extends State<_BookingPageWidget> {
               )
             else
               SummaryBody(
-                courtType: court.type,
+                court: court,
                 onChangeState: () {
                   context.read<SummaryProvider>().clearData();
                   setState(() => _selectedIndex = BookingEnum.reserve);

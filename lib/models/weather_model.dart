@@ -9,6 +9,8 @@ class WeatherModel {
         tempF: double.parse(json['temp_f']?.toString() ?? '.0'),
       );
 
+  factory WeatherModel.toSet() => const WeatherModel(tempC: 0, tempF: 0);
+
   final double tempC;
   final double tempF;
 }

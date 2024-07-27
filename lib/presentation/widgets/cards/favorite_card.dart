@@ -17,9 +17,9 @@ class FavoriteCard extends StatelessWidget {
       court: court,
     );
 
-    if (!context.mounted) return;
     response.fold(
       (errorMessage) {
+        if (!context.mounted) return;
         showDialog<void>(
           context: context,
           builder: (context) => ErrorAlert(text: errorMessage),

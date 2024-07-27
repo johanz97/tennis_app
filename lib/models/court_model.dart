@@ -21,6 +21,18 @@ class CourtModel {
     );
   }
 
+  factory CourtModel.toTest() {
+    return const CourtModel(
+      id: '0',
+      image: '',
+      name: 'Test',
+      type: 'A',
+      available: 'test',
+      address: 'test',
+      cost: 'test',
+    );
+  }
+
   Map<String, dynamic> toMap() {
     return {
       'id': id,

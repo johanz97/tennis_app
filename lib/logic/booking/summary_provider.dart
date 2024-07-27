@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tennis_app/models/booking_model.dart';
 import 'package:tennis_app/models/court_model.dart';
 import 'package:tennis_app/models/trainer_model.dart';
+import 'package:uuid/uuid.dart';
 
 class SummaryProvider with ChangeNotifier {
   SummaryProvider({required this.court});
@@ -19,7 +20,8 @@ class SummaryProvider with ChangeNotifier {
   DateTime? get selectedLastTime => _selectedLastTime;
 
   BookingModel get booking => BookingModel(
-        id: court.id,
+        id: const Uuid().v1(),
+        idCourt: court.id,
         image: court.image,
         name: court.name,
         trainer: selectedTrainer!.name,

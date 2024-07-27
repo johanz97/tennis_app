@@ -14,6 +14,13 @@ class BookingsProvider with ChangeNotifier {
   List<BookingModel> get bookings => _bookings;
   bool get isLoading => _isLoading;
 
+  bool hasBooking({required String courtId, required DateTime date}) {
+    return _bookings.where((value) {
+          return value.idCourt == courtId && value.date == date;
+        }).length <
+        3;
+  }
+
   Future<Either<String, Unit>> addBooking(BookingModel booking) async {
     _isLoading = true;
     notifyListeners();
@@ -39,6 +46,9 @@ class BookingsProvider with ChangeNotifier {
 
       return left(errorMessage);
     }, (response) {
+      response.sort((a, b) {
+        return a.date.compareTo(b.date);
+      });
       _bookings.addAll(response);
       _isLoading = false;
       notifyListeners();
