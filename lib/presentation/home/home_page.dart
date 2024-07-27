@@ -9,6 +9,7 @@ import 'package:tennis_app/presentation/home/widgets/favorite_body.dart';
 import 'package:tennis_app/presentation/home/widgets/home_body.dart';
 import 'package:tennis_app/presentation/home/widgets/home_booking_body.dart';
 import 'package:tennis_app/presentation/widgets/alerts/confirm_operation.dart';
+import 'package:tennis_app/presentation/widgets/alerts/error_alert.dart';
 import 'package:tennis_app/services/firebase_services/authenticated_service.dart';
 import 'package:tennis_app/services/local_services/booking_service.dart';
 import 'package:tennis_app/services/local_services/court_service.dart';
@@ -58,13 +59,31 @@ class _HomePageWidgetState extends State<_HomePageWidget> {
   Future<void> _getBookings() async {
     final response = await context.read<BookingsProvider>().getBookings();
 
-    response.fold((errorMessage) {}, (_) {});
+    if (!mounted) return;
+    response.fold(
+      (errorMessage) {
+        showDialog<void>(
+          context: context,
+          builder: (context) => ErrorAlert(text: errorMessage),
+        );
+      },
+      (_) {},
+    );
   }
 
   Future<void> _getFavorites() async {
     final response = await context.read<FavoriteProvider>().getFavorites();
 
-    response.fold((errorMessage) {}, (_) {});
+    if (!mounted) return;
+    response.fold(
+      (errorMessage) {
+        showDialog<void>(
+          context: context,
+          builder: (context) => ErrorAlert(text: errorMessage),
+        );
+      },
+      (_) {},
+    );
   }
 
   Future<void> _onCloseSession() async {
@@ -79,10 +98,16 @@ class _HomePageWidgetState extends State<_HomePageWidget> {
         ) ??
         false;
 
-    if (!validateClose) return;
+    if (!validateClose || !mounted) return;
     final response = await context.read<AuthenticationProvider>().logOutUser();
-    if (!context.mounted) return;
-    response.fold((errorMessage) {}, (unit) {
+
+    if (!mounted) return;
+    response.fold((errorMessage) {
+      showDialog<void>(
+        context: context,
+        builder: (context) => ErrorAlert(text: errorMessage),
+      );
+    }, (unit) {
       context.read<BookingsProvider>().deleteAllBooking();
       context.read<FavoriteProvider>().deleteAllFavorites();
       context.go('/');

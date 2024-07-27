@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-
-import 'package:tennis_app/presentation/widgets/buttons/btn_tennis.dart';
 import 'package:tennis_app/logic/authentication_provider.dart';
 import 'package:tennis_app/presentation/authenticated/login_or_register_page.dart';
 import 'package:tennis_app/presentation/home/home_page.dart';
+import 'package:tennis_app/presentation/widgets/buttons/btn_tennis.dart';
 import 'package:tennis_app/services/firebase_services/authenticated_service.dart';
 
 class AuthenticatedPage extends StatelessWidget {

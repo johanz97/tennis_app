@@ -3,11 +3,12 @@ import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tennis_app/core/utils.dart';
+import 'package:tennis_app/logic/authentication_provider.dart';
+import 'package:tennis_app/presentation/home/home_page.dart';
+import 'package:tennis_app/presentation/widgets/alerts/error_alert.dart';
 import 'package:tennis_app/presentation/widgets/buttons/btn_tennis.dart';
 import 'package:tennis_app/presentation/widgets/inputs/email_input.dart';
 import 'package:tennis_app/presentation/widgets/inputs/password_input.dart';
-import 'package:tennis_app/logic/authentication_provider.dart';
-import 'package:tennis_app/presentation/home/home_page.dart';
 
 class RegisterBody extends StatefulWidget {
   const RegisterBody({required this.onChangeSection, super.key});
@@ -36,8 +37,13 @@ class _RegisterBodyState extends State<RegisterBody> {
           password: _passwordController.text.trim(),
         );
 
-    if (!context.mounted) return;
-    response.fold((errorMessage) {}, (unit) {
+    if (!mounted) return;
+    response.fold((errorMessage) {
+      showDialog<void>(
+        context: context,
+        builder: (context) => ErrorAlert(text: errorMessage),
+      );
+    }, (unit) {
       context.goNamed(HomePage.routeName);
     });
   }

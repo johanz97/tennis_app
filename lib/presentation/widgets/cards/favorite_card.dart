@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:tennis_app/logic/home/favorite_provider.dart';
 import 'package:tennis_app/models/court_model.dart';
 import 'package:tennis_app/presentation/widgets/alerts/confirm_operation.dart';
+import 'package:tennis_app/presentation/widgets/alerts/error_alert.dart';
 import 'package:tennis_app/presentation/widgets/image_tennis.dart';
 
 class FavoriteCard extends StatelessWidget {
@@ -16,8 +17,14 @@ class FavoriteCard extends StatelessWidget {
       court: court,
     );
 
+    if (!context.mounted) return;
     response.fold(
-      (errorMessage) {},
+      (errorMessage) {
+        showDialog<void>(
+          context: context,
+          builder: (context) => ErrorAlert(text: errorMessage),
+        );
+      },
       (unit) {
         favoriteProvider.getFavorites();
       },

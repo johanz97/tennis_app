@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tennis_app/presentation/widgets/cards/favorite_card.dart';
 import 'package:tennis_app/logic/home/favorite_provider.dart';
+import 'package:tennis_app/presentation/widgets/cards/favorite_card.dart';
 
 class FavoriteBody extends StatelessWidget {
   const FavoriteBody({super.key});

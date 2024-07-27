@@ -5,6 +5,7 @@ import 'package:tennis_app/logic/authentication_provider.dart';
 import 'package:tennis_app/logic/home/bookings_provider.dart';
 import 'package:tennis_app/models/booking_model.dart';
 import 'package:tennis_app/presentation/widgets/alerts/confirm_operation.dart';
+import 'package:tennis_app/presentation/widgets/alerts/error_alert.dart';
 import 'package:tennis_app/presentation/widgets/image_tennis.dart';
 import 'package:tennis_app/presentation/widgets/weather_info.dart';
 
@@ -20,8 +21,14 @@ class BookingCard extends StatelessWidget {
       booking: booking,
     );
 
+    if (!context.mounted) return;
     response.fold(
-      (errorMessage) {},
+      (errorMessage) {
+        showDialog<void>(
+          context: context,
+          builder: (context) => ErrorAlert(text: errorMessage),
+        );
+      },
       (unit) {
         bookingsProvider.getBookings();
       },

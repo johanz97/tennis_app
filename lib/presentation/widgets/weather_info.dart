@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tennis_app/logic/weather_provider.dart';
 import 'package:tennis_app/models/weather_model.dart';
+import 'package:tennis_app/presentation/widgets/alerts/error_alert.dart';
 import 'package:tennis_app/services/dio_services/weather_service.dart';
 
 class WeatherInfo extends StatelessWidget {
@@ -37,7 +38,16 @@ class _WeatherInfoWidgetState extends State<_WeatherInfoWidget> {
             widget.city,
           );
 
-      response.fold((errorMessage) {}, (_) {});
+      if (!mounted) return;
+      response.fold(
+        (errorMessage) {
+          showDialog<void>(
+            context: context,
+            builder: (context) => ErrorAlert(text: errorMessage),
+          );
+        },
+        (_) {},
+      );
     });
   }
 

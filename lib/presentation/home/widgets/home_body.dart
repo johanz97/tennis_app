@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:tennis_app/logic/authentication_provider.dart';
 import 'package:tennis_app/logic/home/bookings_provider.dart';
 import 'package:tennis_app/logic/home/court_provider.dart';
+import 'package:tennis_app/presentation/widgets/alerts/error_alert.dart';
 import 'package:tennis_app/presentation/widgets/cards/booking_card.dart';
 import 'package:tennis_app/presentation/widgets/cards/court_card.dart';
 
@@ -17,7 +18,16 @@ class _HomeBodyState extends State<HomeBody> {
   Future<void> _getCourts() async {
     final response = await context.read<CourtProvider>().getCourts();
 
-    response.fold((errorMessage) {}, (_) {});
+    if (!mounted) return;
+    response.fold(
+      (errorMessage) {
+        showDialog<void>(
+          context: context,
+          builder: (context) => ErrorAlert(text: errorMessage),
+        );
+      },
+      (_) {},
+    );
   }
 
   @override

@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:tennis_app/core/utils.dart';
-import 'package:tennis_app/presentation/widgets/buttons/btn_tennis.dart';
 import 'package:tennis_app/logic/booking/summary_provider.dart';
 import 'package:tennis_app/logic/booking/trainer_provider.dart';
 import 'package:tennis_app/models/trainer_model.dart';
+import 'package:tennis_app/presentation/widgets/alerts/error_alert.dart';
+import 'package:tennis_app/presentation/widgets/buttons/btn_tennis.dart';
 import 'package:tennis_app/services/local_services/court_service.dart';
 
 class BookingBody extends StatelessWidget {
@@ -44,7 +45,14 @@ class _BookingBodyWidgetState extends State<_BookingBodyWidget> {
   Future<void> _getTrainers() async {
     final trainerProvider = context.read<TrainerProvider>();
     final response = await trainerProvider.getTrainers();
-    response.fold((errorMessage) {}, (_) {
+
+    if (!mounted) return;
+    response.fold((errorMessage) {
+      showDialog<void>(
+        context: context,
+        builder: (context) => ErrorAlert(text: errorMessage),
+      );
+    }, (_) {
       if (trainerProvider.trainers.isNotEmpty) {
         context.read<SummaryProvider>().selectedTrainer =
             trainerProvider.trainers.first;

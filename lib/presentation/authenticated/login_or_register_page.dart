@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:tennis_app/presentation/widgets/buttons/btn_icon_tennis.dart';
-import 'package:tennis_app/presentation/widgets/loading_overlay.dart';
 import 'package:tennis_app/logic/authentication_provider.dart';
-
 import 'package:tennis_app/presentation/authenticated/widgets/login_body.dart';
 import 'package:tennis_app/presentation/authenticated/widgets/register_body.dart';
+import 'package:tennis_app/presentation/widgets/buttons/btn_icon_tennis.dart';
+import 'package:tennis_app/presentation/widgets/loading_overlay.dart';
 import 'package:tennis_app/services/firebase_services/authenticated_service.dart';
 
 enum LoginOrRegisterEnum { login, register }

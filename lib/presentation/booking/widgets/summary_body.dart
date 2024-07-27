@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:tennis_app/logic/booking/summary_provider.dart';
+import 'package:tennis_app/logic/home/bookings_provider.dart';
+import 'package:tennis_app/models/trainer_model.dart';
+import 'package:tennis_app/presentation/widgets/alerts/error_alert.dart';
 import 'package:tennis_app/presentation/widgets/buttons/btn_outline_tennis.dart';
 import 'package:tennis_app/presentation/widgets/buttons/btn_tennis.dart';
-import 'package:tennis_app/logic/home/bookings_provider.dart';
-import 'package:tennis_app/logic/booking/summary_provider.dart';
-import 'package:tennis_app/models/trainer_model.dart';
 
 class SummaryBody extends StatelessWidget {
   const SummaryBody({
@@ -23,10 +24,15 @@ class SummaryBody extends StatelessWidget {
         .read<BookingsProvider>()
         .addBooking(summaryProvider.booking);
 
+    if (!context.mounted) return;
     response.fold(
-      (errorMessage) {},
+      (errorMessage) {
+        showDialog<void>(
+          context: context,
+          builder: (context) => ErrorAlert(text: errorMessage),
+        );
+      },
       (unit) {
-        if (!context.mounted) return;
         context.read<BookingsProvider>().getBookings();
         context.pop();
       },

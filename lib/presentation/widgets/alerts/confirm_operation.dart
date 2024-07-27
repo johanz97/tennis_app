@@ -11,7 +11,16 @@ class ConfirmOperationAlert extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Alerta!'),
+      title: const Row(
+        children: [
+          Icon(
+            Icons.notification_important_outlined,
+            color: Colors.orange,
+            size: 40,
+          ),
+          Text('Alerta!', style: TextStyle(color: Colors.orange)),
+        ],
+      ),
       content: Text(text),
       actions: [
         BtnTennis(text: 'Aceptar', onTap: () => context.pop(true)),

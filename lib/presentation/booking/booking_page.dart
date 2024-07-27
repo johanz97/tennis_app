@@ -4,15 +4,16 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:tennis_app/presentation/widgets/buttons/btn_icon_tennis.dart';
-import 'package:tennis_app/presentation/widgets/loading_overlay.dart';
-import 'package:tennis_app/presentation/widgets/weather_info.dart';
+import 'package:tennis_app/logic/booking/summary_provider.dart';
 import 'package:tennis_app/logic/home/bookings_provider.dart';
 import 'package:tennis_app/logic/home/favorite_provider.dart';
-import 'package:tennis_app/logic/booking/summary_provider.dart';
 import 'package:tennis_app/models/court_model.dart';
 import 'package:tennis_app/presentation/booking/widgets/booking_body.dart';
 import 'package:tennis_app/presentation/booking/widgets/summary_body.dart';
+import 'package:tennis_app/presentation/widgets/alerts/error_alert.dart';
+import 'package:tennis_app/presentation/widgets/buttons/btn_icon_tennis.dart';
+import 'package:tennis_app/presentation/widgets/loading_overlay.dart';
+import 'package:tennis_app/presentation/widgets/weather_info.dart';
 
 enum BookingEnum { reserve, summary }
 
@@ -69,8 +70,15 @@ class _BookingPageWidgetState extends State<_BookingPageWidget> {
           )
         : await favoriteProvider.addFavorite(court);
     unawaited(favoriteProvider.getFavorites());
+
+    if (!mounted) return;
     response.fold(
-      (errorMessage) {},
+      (errorMessage) {
+        showDialog<void>(
+          context: context,
+          builder: (context) => ErrorAlert(text: errorMessage),
+        );
+      },
       (unit) {},
     );
   }
@@ -127,7 +135,9 @@ class _BookingPageWidgetState extends State<_BookingPageWidget> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         BtnIconTennis(
-                            icon: Icons.arrow_back, onTap: context.pop),
+                          icon: Icons.arrow_back,
+                          onTap: context.pop,
+                        ),
                         if (isLoadingFavorite)
                           const Center(
                             child: CircularProgressIndicator(),

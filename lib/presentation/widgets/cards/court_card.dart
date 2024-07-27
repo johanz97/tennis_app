@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:tennis_app/presentation/widgets/buttons/btn_tennis.dart';
-import 'package:tennis_app/presentation/widgets/image_tennis.dart';
-import 'package:tennis_app/presentation/widgets/weather_info.dart';
 import 'package:tennis_app/logic/home/bookings_provider.dart';
 import 'package:tennis_app/logic/home/favorite_provider.dart';
 import 'package:tennis_app/models/court_model.dart';
 import 'package:tennis_app/presentation/booking/booking_page.dart';
+import 'package:tennis_app/presentation/widgets/buttons/btn_tennis.dart';
+import 'package:tennis_app/presentation/widgets/image_tennis.dart';
+import 'package:tennis_app/presentation/widgets/weather_info.dart';
 
 class CourtCard extends StatelessWidget {
   const CourtCard({required this.court, super.key});
