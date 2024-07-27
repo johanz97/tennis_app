@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:tennis_app/core/utils.dart';
-import 'package:tennis_app/core/widgets/btn_tennis.dart';
-import 'package:tennis_app/logic/summary_provider.dart';
-import 'package:tennis_app/logic/trainer_provider.dart';
+import 'package:tennis_app/presentation/widgets/buttons/btn_tennis.dart';
+import 'package:tennis_app/logic/booking/summary_provider.dart';
+import 'package:tennis_app/logic/booking/trainer_provider.dart';
 import 'package:tennis_app/models/trainer_model.dart';
-import 'package:tennis_app/services/court_service.dart';
+import 'package:tennis_app/services/local_services/court_service.dart';
 
 class BookingBody extends StatelessWidget {
   const BookingBody({required this.onContinue, super.key});

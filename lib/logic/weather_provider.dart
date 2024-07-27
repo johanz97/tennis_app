@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:tennis_app/models/weather_model.dart';
-import 'package:tennis_app/services/weather_service.dart';
+import 'package:tennis_app/services/dio_services/weather_service.dart';
 
 class WeatherProvider with ChangeNotifier {
   WeatherProvider({required this.service});

@@ -1,19 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tennis_app/core/widgets/favorite_card.dart';
-import 'package:tennis_app/logic/favorite_provider.dart';
-import 'package:tennis_app/models/court_model.dart';
+import 'package:tennis_app/presentation/widgets/cards/favorite_card.dart';
+import 'package:tennis_app/logic/home/favorite_provider.dart';
 
 class FavoriteBody extends StatelessWidget {
   const FavoriteBody({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final favoritesCourts = context.watch<FavoriteProvider>().favoritesCourts;
     final isLoading = context.select<FavoriteProvider, bool>(
       (provider) => provider.isLoading,
-    );
-    final favoritesCourts = context.select<FavoriteProvider, List<CourtModel>>(
-      (provider) => provider.favoritesCourts,
     );
 
     return Column(

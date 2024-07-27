@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tennis_app/logic/weather_provider.dart';
 import 'package:tennis_app/models/weather_model.dart';
-import 'package:tennis_app/services/weather_service.dart';
+import 'package:tennis_app/services/dio_services/weather_service.dart';
 
 class WeatherInfo extends StatelessWidget {
   const WeatherInfo({required this.city, super.key});

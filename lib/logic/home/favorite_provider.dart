@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:tennis_app/models/court_model.dart';
-import 'package:tennis_app/services/favorite_service.dart';
+import 'package:tennis_app/services/local_services/favorite_service.dart';
 
 class FavoriteProvider with ChangeNotifier {
   FavoriteProvider({required this.service});

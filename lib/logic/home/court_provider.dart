@@ -1,25 +1,25 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
-import 'package:tennis_app/models/trainer_model.dart';
-import 'package:tennis_app/services/court_service.dart';
+import 'package:tennis_app/models/court_model.dart';
+import 'package:tennis_app/services/local_services/court_service.dart';
 
-class TrainerProvider with ChangeNotifier {
-  TrainerProvider({required this.service});
+class CourtProvider with ChangeNotifier {
+  CourtProvider({required this.service});
 
   final CourtService service;
 
-  final List<TrainerModel> _trainers = [];
+  final List<CourtModel> _courts = [];
   bool _isLoading = false;
 
-  List<TrainerModel> get trainers => _trainers;
+  List<CourtModel> get courts => _courts;
   bool get isLoading => _isLoading;
 
-  Future<Either<String, Unit>> getTrainers() async {
-    _trainers.clear();
+  Future<Either<String, Unit>> getCourts() async {
+    _courts.clear();
     _isLoading = true;
     notifyListeners();
 
-    final response = await service.readTrainers();
+    final response = await service.readCourts();
 
     return response.fold((errorMessage) {
       _isLoading = false;
@@ -27,7 +27,7 @@ class TrainerProvider with ChangeNotifier {
 
       return left(errorMessage);
     }, (response) {
-      _trainers.addAll(response);
+      _courts.addAll(response);
       _isLoading = false;
       notifyListeners();
 

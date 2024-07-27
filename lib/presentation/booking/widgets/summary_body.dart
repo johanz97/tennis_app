@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:tennis_app/core/widgets/btn_outline_tennis.dart';
-import 'package:tennis_app/core/widgets/btn_tennis.dart';
-import 'package:tennis_app/logic/bookings_provider.dart';
-import 'package:tennis_app/logic/summary_provider.dart';
+import 'package:tennis_app/presentation/widgets/buttons/btn_outline_tennis.dart';
+import 'package:tennis_app/presentation/widgets/buttons/btn_tennis.dart';
+import 'package:tennis_app/logic/home/bookings_provider.dart';
+import 'package:tennis_app/logic/booking/summary_provider.dart';
 import 'package:tennis_app/models/trainer_model.dart';
 
 class SummaryBody extends StatelessWidget {

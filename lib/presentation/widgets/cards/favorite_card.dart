@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tennis_app/core/widgets/image_tennis.dart';
-import 'package:tennis_app/logic/favorite_provider.dart';
+import 'package:tennis_app/logic/home/favorite_provider.dart';
 import 'package:tennis_app/models/court_model.dart';
+import 'package:tennis_app/presentation/widgets/alerts/confirm_operation.dart';
+import 'package:tennis_app/presentation/widgets/image_tennis.dart';
 
 class FavoriteCard extends StatelessWidget {
   const FavoriteCard({required this.court, super.key});
@@ -27,6 +28,12 @@ class FavoriteCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Dismissible(
       key: Key(court.id),
+      confirmDismiss: (direction) async => showDialog(
+        context: context,
+        builder: (context) => const ConfirmOperationAlert(
+          text: '¿Desea quitar de favoritos?',
+        ),
+      ),
       onDismissed: (_) => _onDeleteFavorite(context),
       background: Container(color: Colors.red),
       child: Row(

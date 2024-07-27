@@ -3,9 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tennis_app/core/utils.dart';
-import 'package:tennis_app/core/widgets/btn_tennis.dart';
-import 'package:tennis_app/core/widgets/email_input.dart';
-import 'package:tennis_app/core/widgets/password_input.dart';
+import 'package:tennis_app/presentation/widgets/buttons/btn_tennis.dart';
+import 'package:tennis_app/presentation/widgets/inputs/email_input.dart';
+import 'package:tennis_app/presentation/widgets/inputs/password_input.dart';
 import 'package:tennis_app/logic/authentication_provider.dart';
 import 'package:tennis_app/presentation/home/home_page.dart';
 

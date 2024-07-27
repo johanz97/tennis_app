@@ -2,16 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tennis_app/logic/authentication_provider.dart';
-import 'package:tennis_app/logic/bookings_provider.dart';
-import 'package:tennis_app/logic/favorite_provider.dart';
-import 'package:tennis_app/logic/home_provider.dart';
+import 'package:tennis_app/logic/home/bookings_provider.dart';
+import 'package:tennis_app/logic/home/court_provider.dart';
+import 'package:tennis_app/logic/home/favorite_provider.dart';
 import 'package:tennis_app/presentation/home/widgets/favorite_body.dart';
 import 'package:tennis_app/presentation/home/widgets/home_body.dart';
 import 'package:tennis_app/presentation/home/widgets/home_booking_body.dart';
-import 'package:tennis_app/services/authenticated_service.dart';
-import 'package:tennis_app/services/booking_service.dart';
-import 'package:tennis_app/services/court_service.dart';
-import 'package:tennis_app/services/favorite_service.dart';
+import 'package:tennis_app/presentation/widgets/alerts/confirm_operation.dart';
+import 'package:tennis_app/services/firebase_services/authenticated_service.dart';
+import 'package:tennis_app/services/local_services/booking_service.dart';
+import 'package:tennis_app/services/local_services/court_service.dart';
+import 'package:tennis_app/services/local_services/favorite_service.dart';
 
 enum NavBarEnum { home, bookings, favorite }
 
@@ -25,11 +26,12 @@ class HomePage extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (context) =>
-              AuthenticationProvider(service: AuthenticatedService()),
+          create: (context) {
+            return AuthenticationProvider(service: AuthenticatedService());
+          },
         ),
         ChangeNotifierProvider(
-          create: (context) => HomeProvider(service: CourtService()),
+          create: (context) => CourtProvider(service: CourtService()),
         ),
         ChangeNotifierProvider(
           create: (context) => BookingsProvider(service: BookingService()),
@@ -66,6 +68,18 @@ class _HomePageWidgetState extends State<_HomePageWidget> {
   }
 
   Future<void> _onCloseSession() async {
+    final validateClose = await showDialog<bool>(
+          context: context,
+          builder: (context) {
+            return const ConfirmOperationAlert(
+              text:
+                  'Al cerrar sesión perdera todos sus registros, ¿Desea continuar?',
+            );
+          },
+        ) ??
+        false;
+
+    if (!validateClose) return;
     final response = await context.read<AuthenticationProvider>().logOutUser();
     if (!context.mounted) return;
     response.fold((errorMessage) {}, (unit) {

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tennis_app/core/widgets/booking_card.dart';
-import 'package:tennis_app/core/widgets/btn_tennis.dart';
-import 'package:tennis_app/logic/bookings_provider.dart';
+import 'package:tennis_app/logic/home/bookings_provider.dart';
 import 'package:tennis_app/models/booking_model.dart';
+import 'package:tennis_app/presentation/widgets/buttons/btn_tennis.dart';
+import 'package:tennis_app/presentation/widgets/cards/booking_card.dart';
 
 class HomeBookingBody extends StatelessWidget {
   const HomeBookingBody({required this.onNewBooking, super.key});

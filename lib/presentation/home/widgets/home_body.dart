@@ -1,13 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tennis_app/core/widgets/booking_card.dart';
-import 'package:tennis_app/core/widgets/court_card.dart';
 import 'package:tennis_app/logic/authentication_provider.dart';
-import 'package:tennis_app/logic/bookings_provider.dart';
-import 'package:tennis_app/logic/home_provider.dart';
-import 'package:tennis_app/models/booking_model.dart';
-import 'package:tennis_app/models/court_model.dart';
+import 'package:tennis_app/logic/home/bookings_provider.dart';
+import 'package:tennis_app/logic/home/court_provider.dart';
+import 'package:tennis_app/presentation/widgets/cards/booking_card.dart';
+import 'package:tennis_app/presentation/widgets/cards/court_card.dart';
 
 class HomeBody extends StatefulWidget {
   const HomeBody({super.key});
@@ -18,7 +15,7 @@ class HomeBody extends StatefulWidget {
 
 class _HomeBodyState extends State<HomeBody> {
   Future<void> _getCourts() async {
-    final response = await context.read<HomeProvider>().getCourts();
+    final response = await context.read<CourtProvider>().getCourts();
 
     response.fold((errorMessage) {}, (_) {});
   }
@@ -33,20 +30,16 @@ class _HomeBodyState extends State<HomeBody> {
 
   @override
   Widget build(BuildContext context) {
-    final user = context.select<AuthenticationProvider, User?>(
-      (provider) => provider.user,
+    final courts = context.watch<CourtProvider>().courts;
+    final bookings = context.watch<BookingsProvider>().bookings;
+    final userName = context.select<AuthenticationProvider, String>(
+      (provider) => provider.user?.displayName ?? '',
     );
-    final isLoading = context.select<HomeProvider, bool>(
+    final isLoading = context.select<CourtProvider, bool>(
       (provider) => provider.isLoading,
-    );
-    final courts = context.select<HomeProvider, List<CourtModel>>(
-      (provider) => provider.courts,
     );
     final isLoadingBookings = context.select<BookingsProvider, bool>(
       (provider) => provider.isLoading,
-    );
-    final bookings = context.select<BookingsProvider, List<BookingModel>>(
-      (provider) => provider.bookings,
     );
 
     return ListView(
@@ -55,7 +48,7 @@ class _HomeBodyState extends State<HomeBody> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Text(
-            'Hola ${user?.displayName ?? ''}!',
+            'Hola $userName!',
             style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
         ),
