@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:tennis_app/core/widgets/btn_tennis.dart';
+import 'package:tennis_app/core/widgets/image_tennis.dart';
 import 'package:tennis_app/core/widgets/weather_info.dart';
 import 'package:tennis_app/logic/bookings_provider.dart';
 import 'package:tennis_app/logic/favorite_provider.dart';
@@ -32,22 +33,7 @@ class CourtCard extends StatelessWidget {
       child: Card(
         child: Column(
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: court.image.isNotEmpty
-                  ? Image.network(
-                      court.image,
-                      width: double.infinity,
-                      height: 150,
-                      fit: BoxFit.fill,
-                    )
-                  : Image.asset(
-                      'assets/images/logo_login.png',
-                      width: double.infinity,
-                      height: 150,
-                      fit: BoxFit.fill,
-                    ),
-            ),
+            ImageTennis(urlImage: court.image, height: 150),
             Padding(
               padding: const EdgeInsets.all(10),
               child: Column(

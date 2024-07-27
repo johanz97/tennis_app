@@ -14,8 +14,9 @@ class AuthenticatedPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) =>
-          AuthenticationProvider(service: AuthenticatedService()),
+      create: (context) {
+        return AuthenticationProvider(service: AuthenticatedService());
+      },
       builder: (context, child) => const _AuthenticatedPageWidget(),
     );
   }
@@ -39,10 +40,7 @@ class _AuthenticatedPageStateWidget extends State<_AuthenticatedPageWidget> {
     final user = context.read<AuthenticationProvider>().user;
     setState(() => _isLoading = false);
     if (user != null) {
-      context.goNamed(
-        HomePage.routeName,
-        extra: context.read<AuthenticationProvider>(),
-      );
+      context.goNamed(HomePage.routeName);
     }
   }
 

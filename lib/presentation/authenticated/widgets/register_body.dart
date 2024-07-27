@@ -38,10 +38,7 @@ class _RegisterBodyState extends State<RegisterBody> {
 
     if (!context.mounted) return;
     response.fold((errorMessage) {}, (unit) {
-      context.goNamed(
-        HomePage.routeName,
-        extra: context.read<AuthenticationProvider>(),
-      );
+      context.goNamed(HomePage.routeName);
     });
   }
 
@@ -113,9 +110,15 @@ class _RegisterBodyState extends State<RegisterBody> {
             label: 'Contraseña',
           ),
           const SizedBox(height: 5),
-          PasswordInput(
-            passwordController: _confirmPasswordController,
-            label: 'Confirmar contraseña',
+          ValueListenableBuilder<TextEditingValue>(
+            valueListenable: _passwordController,
+            builder: (context, value, child) {
+              return PasswordInput(
+                validatePassword: value.text,
+                passwordController: _confirmPasswordController,
+                label: 'Confirmar contraseña',
+              );
+            },
           ),
           const SizedBox(height: 30),
           BtnTennis(

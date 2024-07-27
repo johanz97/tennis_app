@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tennis_app/core/widgets/image_tennis.dart';
 import 'package:tennis_app/logic/favorite_provider.dart';
 import 'package:tennis_app/models/court_model.dart';
 
@@ -30,22 +31,7 @@ class FavoriteCard extends StatelessWidget {
       background: Container(color: Colors.red),
       child: Row(
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: court.image.isNotEmpty
-                ? Image.network(
-                    court.image,
-                    width: 50,
-                    height: 50,
-                    fit: BoxFit.fill,
-                  )
-                : Image.asset(
-                    'assets/images/authenticated_background.png',
-                    width: 50,
-                    height: 50,
-                    fit: BoxFit.fill,
-                  ),
-          ),
+          ImageTennis(urlImage: court.image, width: 50, height: 50),
           const SizedBox(width: 10),
           Expanded(
             child: Column(

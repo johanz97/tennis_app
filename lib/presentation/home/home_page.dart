@@ -8,6 +8,7 @@ import 'package:tennis_app/logic/home_provider.dart';
 import 'package:tennis_app/presentation/home/widgets/favorite_body.dart';
 import 'package:tennis_app/presentation/home/widgets/home_body.dart';
 import 'package:tennis_app/presentation/home/widgets/home_booking_body.dart';
+import 'package:tennis_app/services/authenticated_service.dart';
 import 'package:tennis_app/services/booking_service.dart';
 import 'package:tennis_app/services/court_service.dart';
 import 'package:tennis_app/services/favorite_service.dart';
@@ -15,17 +16,18 @@ import 'package:tennis_app/services/favorite_service.dart';
 enum NavBarEnum { home, bookings, favorite }
 
 class HomePage extends StatelessWidget {
-  const HomePage({required this.authenticationProvider, super.key});
+  const HomePage({super.key});
 
   static String routeName = 'home';
-
-  final AuthenticationProvider authenticationProvider;
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider.value(value: authenticationProvider),
+        ChangeNotifierProvider(
+          create: (context) =>
+              AuthenticationProvider(service: AuthenticatedService()),
+        ),
         ChangeNotifierProvider(
           create: (context) => HomeProvider(service: CourtService()),
         ),

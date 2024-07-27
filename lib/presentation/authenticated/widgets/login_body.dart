@@ -33,10 +33,7 @@ class _LoginBodyState extends State<LoginBody> {
 
     if (!context.mounted) return;
     response.fold((errorMessage) {}, (unit) {
-      context.goNamed(
-        HomePage.routeName,
-        extra: context.read<AuthenticationProvider>(),
-      );
+      context.goNamed(HomePage.routeName);
     });
   }
 

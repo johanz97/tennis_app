@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:tennis_app/core/widgets/image_tennis.dart';
 import 'package:tennis_app/core/widgets/weather_info.dart';
 import 'package:tennis_app/logic/authentication_provider.dart';
 import 'package:tennis_app/logic/bookings_provider.dart';
@@ -39,22 +40,7 @@ class BookingCard extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: booking.image.isNotEmpty
-                ? Image.network(
-                    booking.image,
-                    width: 50,
-                    height: 50,
-                    fit: BoxFit.fill,
-                  )
-                : Image.asset(
-                    'assets/images/authenticated_background.png',
-                    width: 50,
-                    height: 50,
-                    fit: BoxFit.fill,
-                  ),
-          ),
+          ImageTennis(urlImage: booking.image, width: 50, height: 50),
           const SizedBox(width: 10),
           Expanded(
             child: Column(

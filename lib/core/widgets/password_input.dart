@@ -6,11 +6,13 @@ class PasswordInput extends StatefulWidget {
   const PasswordInput({
     required this.passwordController,
     required this.label,
+    this.validatePassword,
     super.key,
   });
 
   final TextEditingController passwordController;
   final String label;
+  final String? validatePassword;
 
   @override
   State<PasswordInput> createState() => _PasswordInputState();
@@ -33,11 +35,21 @@ class _PasswordInputState extends State<PasswordInput> {
         FilteringTextInputFormatter.deny(' '),
       ],
       validator: (value) {
-        return value?.isEmpty ?? true
-            ? 'Campo requerido'
-            : value!.length < 6
-                ? 'La contraseña debe tener mínimo 6 caracteres'
-                : null;
+        if (value?.isEmpty ?? true) {
+          return 'Campo requerido';
+        }
+
+        if (value!.length < 6) {
+          return 'La contraseña debe tener mínimo 6 caracteres';
+        }
+
+        if (widget.validatePassword != null) {
+          if (value != widget.validatePassword) {
+            return 'La contraseña no coincide';
+          }
+        }
+
+        return null;
       },
       decoration: decoration(
         context: context,
